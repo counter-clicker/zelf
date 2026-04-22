@@ -9,133 +9,188 @@
     <style>
         :root {
             --silver: linear-gradient(135deg, #f5f7fa 0%, #b8c6db 50%, #f5f7fa 100%);
+            --glass: rgba(255, 255, 255, 0.03);
         }
-        body { background-color: #050505; color: #f5f5f5; overflow-x: hidden; }
+        body { background-color: #050505; color: #f5f5f5; overflow-x: hidden; min-height: 100vh; }
 
-        /* Metallic Shine Effect */
-        .shine {
-            position: relative;
-            overflow: hidden;
-        }
-        .shine::after {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%;
-            width: 200%; height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
-            transform: rotate(45deg);
-            transition: 0.5s;
-            pointer-events: none;
-        }
-        .shine:hover::after {
-            animation: sweep 0.8s ease-in-out;
-        }
-        @keyframes sweep {
-            0% { transform: translate(-100%, -100%) rotate(45deg); }
-            100% { transform: translate(100%, 100%) rotate(45deg); }
-        }
-
-        /* Bento Grid Styling */
-        .bento-card {
-            background: #0f0f0f;
-            border: 1px solid #1f1f1f;
-            transition: border-color 0.4s, transform 0.4s;
-        }
-        .bento-card:hover {
-            border-color: #ffffff;
-            transform: translateY(-5px);
-        }
-
-        /* Metallic Text */
         .text-silver {
             background: var(--silver);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
+        .bento-card, .price-card {
+            background: var(--glass);
+            border: 1px solid #1f1f1f;
+            backdrop-filter: blur(10px);
+            transition: border-color 0.4s;
+        }
+
+        .price-card:hover { border-color: #ffffff; }
+
+        /* Shine effect voor knoppen */
+        .shine { position: relative; overflow: hidden; }
+        .shine::after {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: rotate(45deg);
+            pointer-events: none;
+        }
+        .shine:hover::after { animation: sweep 0.8s ease-in-out; }
+        @keyframes sweep {
+            0% { transform: translate(-100%, -100%) rotate(45deg); }
+            100% { transform: translate(100%, 100%) rotate(45deg); }
+        }
+
+        .hidden-section { display: none; opacity: 0; }
+
+        input, textarea {
+            background: #0f0f0f;
+            border: 1px solid #333;
+            color: white;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        input:focus, textarea:focus { border-color: #b8c6db; }
     </style>
 </head>
 <body class="font-sans">
 
-    <nav class="flex justify-between items-center p-8 max-w-7xl mx-auto uppercase tracking-widest text-xs">
-        <div class="font-bold text-xl tracking-tighter normal-case">ZELF.</div>
-        <div class="space-x-8">
+    <nav class="flex justify-between items-center p-8 max-w-7xl mx-auto">
+        <a href="/">
+            <img src="ZELF..png" alt="Zelf Logo" class="h-6 md:h-8 w-auto object-contain">
+        </a>
+        <div class="space-x-8 text-xs uppercase tracking-widest hidden md:flex items-center">
             <a href="#work" class="hover:text-gray-400 transition">Work</a>
             <button class="magnetic bg-white text-black px-6 py-2 rounded-full font-bold shine">Contact</button>
         </div>
     </nav>
 
-    <section class="flex flex-col items-center justify-center min-h-[70vh] text-center px-4">
-        <h1 class="text-6xl md:text-8xl font-black mb-6 italic tracking-tighter text-silver">
-            ZELF.
-        </h1>
-        <p class="max-w-xl text-gray-500 text-lg mb-10">
-            Jouw visie, vertaald in een digitale ervaring. Wij bouwen de toekomst van het web.
-        </p>
-        <div class="flex gap-6">
-            <button class="magnetic px-8 py-4 bg-white text-black rounded-xl font-bold shine">Start jouw project</button>
-            <button class="magnetic px-8 py-4 border border-gray-800 rounded-xl font-bold shine hover:bg-white hover:text-black transition-colors">Bekijk portfolio</button>
-        </div>
-    </section>
-
-    <section id="work" class="max-w-7xl mx-auto px-6 py-24">
-        <h2 class="text-3xl font-bold mb-12 uppercase tracking-tighter italic">Geselecteerd Werk</h2>
+    <main id="content-wrapper" class="max-w-7xl mx-auto px-6">
         
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-[300px]">
-            <div class="bento-card md:col-span-2 md:row-span-2 rounded-3xl p-8 flex flex-col justify-end relative overflow-hidden group">
-                <div class="absolute top-8 right-8 opacity-20 group-hover:opacity-100 transition">01</div>
-                <h3 class="text-4xl font-black italic text-silver">AURA</h3>
-                <p class="text-gray-500">Luxe Fashion House & E-commerce</p>
+        <section id="step-1" class="flex flex-col items-center justify-center min-h-[70vh] text-center">
+            <h1 class="text-6xl md:text-8xl font-black mb-6 italic tracking-tighter text-silver">ZELF.</h1>
+            <p class="max-w-xl text-gray-500 text-lg mb-10 leading-relaxed">
+                Jouw visie, vertaald in een digitale ervaring. Wij bouwen de toekomst van het web.
+            </p>
+            <div class="flex gap-6">
+                <button onclick="goToStep(2)" class="magnetic px-8 py-4 bg-white text-black rounded-xl font-bold shine">Start jouw project</button>
+                <a href="#work" class="magnetic px-8 py-4 border border-gray-800 rounded-xl font-bold hover:bg-gray-900 transition flex items-center">Bekijk portfolio</a>
             </div>
+        </section>
 
-            <div class="bento-card rounded-3xl p-8 flex flex-col justify-end relative group">
-                <div class="absolute top-8 right-8 opacity-20 group-hover:opacity-100 transition">02</div>
-                <h3 class="text-2xl font-bold text-silver italic">NEO-DYNAMICS</h3>
-                <p class="text-gray-400 text-sm">FinTech Solution</p>
+        <section id="step-2" class="hidden-section py-20">
+            <h2 class="text-4xl font-bold mb-12 text-center text-silver italic">Kies jouw pakket</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div onclick="selectPlan('Basic')" class="price-card p-10 rounded-3xl cursor-pointer group">
+                    <h3 class="text-xl font-bold mb-2">Basic</h3>
+                    <div class="text-3xl font-black mb-6">€ 950,-</div>
+                    <ul class="text-gray-500 space-y-3 mb-8 text-sm">
+                        <li>One-page design</li>
+                        <li>Responsive Mobile UI</li>
+                        <li>Basis SEO</li>
+                    </ul>
+                    <button class="w-full py-3 border border-gray-700 rounded-xl group-hover:bg-white group-hover:text-black transition">Selecteer</button>
+                </div>
+                <div onclick="selectPlan('Professional')" class="price-card p-10 rounded-3xl cursor-pointer group border-white">
+                    <h3 class="text-xl font-bold mb-2 text-silver">Professional</h3>
+                    <div class="text-3xl font-black mb-6">€ 1.950,-</div>
+                    <ul class="text-gray-400 space-y-3 mb-8 text-sm">
+                        <li>Tot 5 pagina's</li>
+                        <li>CMS Integratie</li>
+                        <li>Advanced SEO</li>
+                    </ul>
+                    <button class="w-full py-3 bg-white text-black rounded-xl font-bold">Populairste</button>
+                </div>
+                <div onclick="selectPlan('Enterprise')" class="price-card p-10 rounded-3xl cursor-pointer group">
+                    <h3 class="text-xl font-bold mb-2">Enterprise</h3>
+                    <div class="text-3xl font-black mb-6 text-gray-400">Custom</div>
+                    <ul class="text-gray-500 space-y-3 mb-8 text-sm">
+                        <li>Full Web-App</li>
+                        <li>Custom Animaties</li>
+                        <li>24/7 Support</li>
+                    </ul>
+                    <button class="w-full py-3 border border-gray-700 rounded-xl group-hover:bg-white group-hover:text-black transition">Selecteer</button>
+                </div>
             </div>
+        </section>
 
-            <div class="bento-card rounded-3xl p-8 flex flex-col justify-end relative group">
-                <div class="absolute top-8 right-8 opacity-20 group-hover:opacity-100 transition">03</div>
-                <h3 class="text-2xl font-bold text-silver italic">MONOLITH</h3>
-                <p class="text-gray-400 text-sm">Architecture Agency</p>
+        <section id="step-3" class="hidden-section py-20 flex flex-col items-center">
+            <h2 class="text-4xl font-bold mb-4 text-silver italic text-center">Vertel ons meer</h2>
+            <p id="plan-display" class="text-gray-500 mb-10 italic"></p>
+            <div class="w-full max-w-2xl">
+                <textarea id="project-info" rows="6" class="w-full p-6 rounded-2xl mb-6 text-lg" placeholder="Beschrijf je project, doelen en wensen..."></textarea>
+                <button id="submit-btn" onclick="submitProject()" class="w-full py-4 bg-white text-black rounded-xl font-bold text-xl shine flex justify-center items-center gap-2 transition-all">
+                    <span>Verstuur Aanvraag</span>
+                </button>
             </div>
-        </div>
-    </section>
+        </section>
+
+    </main>
 
     <script>
-        // Magnetic Button Logic
-        const magnets = document.querySelectorAll('.magnetic');
-        
-        magnets.forEach((magnet) => {
-            magnet.addEventListener('mousemove', (e) => {
-                const position = magnet.getBoundingClientRect();
-                const x = e.pageX - position.left - position.width / 2;
-                const y = e.pageY - position.top - position.height / 2;
-                
-                gsap.to(magnet, {
-                    duration: 0.3,
-                    x: x * 0.4,
-                    y: y * 0.4,
-                    ease: "power2.out"
-                });
-            });
-            
-            magnet.addEventListener('mouseleave', (e) => {
-                gsap.to(magnet, {
-                    duration: 0.3,
-                    x: 0,
-                    y: 0,
-                    ease: "elastic.out(1, 0.3)"
-                });
-            });
-        });
+        let selectedPlan = "";
 
-        // Simple Fade-in for Cards
-        gsap.from(".bento-card", {
-            scrollTrigger: "#work",
-            y: 50,
-            opacity: 0,
-            duration: 1,
-            stagger: 0.2
+        // Stap-naar-stap navigatie met GSAP
+        function goToStep(step) {
+            const current = document.querySelector('section:not(.hidden-section)');
+            const next = document.getElementById(`step-${step}`);
+
+            gsap.to(current, {
+                opacity: 0, 
+                y: -20, 
+                duration: 0.5, 
+                onComplete: () => {
+                    current.style.display = 'none';
+                    next.style.display = 'block';
+                    if(step === 2) next.classList.add('grid'); // Voor de pricing grid
+                    gsap.to(next, { opacity: 1, y: 0, duration: 0.6, delay: 0.1 });
+                }
+            });
+        }
+
+        function selectPlan(plan) {
+            selectedPlan = plan;
+            document.getElementById('plan-display').innerText = `Gekozen pakket: ${plan}`;
+            goToStep(3);
+        }
+
+        function submitProject() {
+            const btn = document.getElementById('submit-btn');
+            const info = document.getElementById('project-info').value;
+
+            if(!info) return alert("Vul a.u.b. wat informatie in.");
+
+            // Verzend-animatie
+            gsap.to(btn, { scale: 0.95, duration: 0.1, yoyo: true, repeat: 1 });
+            btn.innerHTML = `<span>Verzonden!</span> <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>`;
+            btn.classList.replace('bg-white', 'bg-green-500');
+            btn.style.color = "white";
+            
+            setTimeout(() => {
+                alert("Bedankt! We nemen binnen 24 uur contact op over je " + selectedPlan + " project.");
+                location.reload(); // Reset de flow
+            }, 2000);
+        }
+
+        // Magnetic Effect (GSAP Quicksetter voor performance)
+        const magnets = document.querySelectorAll('.magnetic');
+        magnets.forEach((magnet) => {
+            const xTo = gsap.quickTo(magnet, "x", {duration: 0.3, ease: "power3"}),
+                  yTo = gsap.quickTo(magnet, "y", {duration: 0.3, ease: "power3"});
+
+            magnet.addEventListener('mousemove', (e) => {
+                const {width, height, left, top} = magnet.getBoundingClientRect();
+                const x = (e.clientX - (left + width / 2)) * 0.5;
+                const y = (e.clientY - (top + height / 2)) * 0.5;
+                xTo(x); yTo(y);
+            });
+            magnet.addEventListener('mouseleave', () => {
+                xTo(0); yTo(0);
+            });
         });
     </script>
 </body>
