@@ -5,38 +5,138 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zelf | High-End Webdesign</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <style>
-        body { background-color: #0d1117; } /* GitHub Dark Mode kleur */
+        :root {
+            --silver: linear-gradient(135deg, #f5f7fa 0%, #b8c6db 50%, #f5f7fa 100%);
+        }
+        body { background-color: #050505; color: #f5f5f5; overflow-x: hidden; }
+
+        /* Metallic Shine Effect */
+        .shine {
+            position: relative;
+            overflow: hidden;
+        }
+        .shine::after {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            transition: 0.5s;
+            pointer-events: none;
+        }
+        .shine:hover::after {
+            animation: sweep 0.8s ease-in-out;
+        }
+        @keyframes sweep {
+            0% { transform: translate(-100%, -100%) rotate(45deg); }
+            100% { transform: translate(100%, 100%) rotate(45deg); }
+        }
+
+        /* Bento Grid Styling */
+        .bento-card {
+            background: #0f0f0f;
+            border: 1px solid #1f1f1f;
+            transition: border-color 0.4s, transform 0.4s;
+        }
+        .bento-card:hover {
+            border-color: #ffffff;
+            transform: translateY(-5px);
+        }
+
+        /* Metallic Text */
+        .text-silver {
+            background: var(--silver);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
     </style>
 </head>
-<body class="text-gray-100 font-sans">
+<body class="font-sans">
 
-    <nav class="flex justify-between items-center p-6 max-w-7xl mx-auto">
-        <div class="text-2xl font-bold tracking-tighter">ZELF.</div>
-        <div class="space-x-8 hidden md:flex">
-            <a href="#werk" class="hover:text-blue-400 transition">Werk</a>
-            <a href="#diensten" class="hover:text-blue-400 transition">Diensten</a>
-            <a href="#contact" class="bg-blue-600 px-5 py-2 rounded-full font-medium hover:bg-blue-700 transition">Contact</a>
+    <nav class="flex justify-between items-center p-8 max-w-7xl mx-auto uppercase tracking-widest text-xs">
+        <div class="font-bold text-xl tracking-tighter normal-case">ZELF.</div>
+        <div class="space-x-8">
+            <a href="#work" class="hover:text-gray-400 transition">Work</a>
+            <button class="magnetic bg-white text-black px-6 py-2 rounded-full font-bold shine">Contact</button>
         </div>
     </nav>
 
-    <header class="flex flex-col items-center justify-center min-h-[80vh] text-center px-4">
-        <h1 class="text-5xl md:text-7xl font-extrabold mb-6 bg-gradient-to-r from-white to-gray-500 bg-clip-text text-transparent italic">
-            Jouw visie, vertaald in een <br> digitale ervaring.
+    <section class="flex flex-col items-center justify-center min-h-[70vh] text-center px-4">
+        <h1 class="text-6xl md:text-8xl font-black mb-6 italic tracking-tighter text-silver">
+            ZELF.
         </h1>
-        <p class="max-w-2xl text-gray-400 text-lg md:text-xl mb-10 leading-relaxed">
-            Wij bouwen razendsnelle, moderne websites die jouw merk versterken. 
-            Bij <span class="text-white font-semibold">Zelf</span> combineren we persoonlijk contact met high-end design.
+        <p class="max-w-xl text-gray-500 text-lg mb-10">
+            Jouw visie, vertaald in een digitale ervaring. Wij bouwen de toekomst van het web.
         </p>
-        <div class="flex flex-col md:flex-row gap-4">
-            <a href="#contact" class="bg-white text-black px-8 py-4 rounded-xl font-bold hover:bg-gray-200 transition">
-                Start jouw project →
-            </a>
-            <a href="#werk" class="border border-gray-700 px-8 py-4 rounded-xl font-bold hover:bg-gray-800 transition">
-                Bekijk portfolio
-            </a>
+        <div class="flex gap-6">
+            <button class="magnetic px-8 py-4 bg-white text-black rounded-xl font-bold shine">Start jouw project</button>
+            <button class="magnetic px-8 py-4 border border-gray-800 rounded-xl font-bold shine hover:bg-white hover:text-black transition-colors">Bekijk portfolio</button>
         </div>
-    </header>
+    </section>
 
+    <section id="work" class="max-w-7xl mx-auto px-6 py-24">
+        <h2 class="text-3xl font-bold mb-12 uppercase tracking-tighter italic">Geselecteerd Werk</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-[300px]">
+            <div class="bento-card md:col-span-2 md:row-span-2 rounded-3xl p-8 flex flex-col justify-end relative overflow-hidden group">
+                <div class="absolute top-8 right-8 opacity-20 group-hover:opacity-100 transition">01</div>
+                <h3 class="text-4xl font-black italic text-silver">AURA</h3>
+                <p class="text-gray-500">Luxe Fashion House & E-commerce</p>
+            </div>
+
+            <div class="bento-card rounded-3xl p-8 flex flex-col justify-end relative group">
+                <div class="absolute top-8 right-8 opacity-20 group-hover:opacity-100 transition">02</div>
+                <h3 class="text-2xl font-bold text-silver italic">NEO-DYNAMICS</h3>
+                <p class="text-gray-400 text-sm">FinTech Solution</p>
+            </div>
+
+            <div class="bento-card rounded-3xl p-8 flex flex-col justify-end relative group">
+                <div class="absolute top-8 right-8 opacity-20 group-hover:opacity-100 transition">03</div>
+                <h3 class="text-2xl font-bold text-silver italic">MONOLITH</h3>
+                <p class="text-gray-400 text-sm">Architecture Agency</p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Magnetic Button Logic
+        const magnets = document.querySelectorAll('.magnetic');
+        
+        magnets.forEach((magnet) => {
+            magnet.addEventListener('mousemove', (e) => {
+                const position = magnet.getBoundingClientRect();
+                const x = e.pageX - position.left - position.width / 2;
+                const y = e.pageY - position.top - position.height / 2;
+                
+                gsap.to(magnet, {
+                    duration: 0.3,
+                    x: x * 0.4,
+                    y: y * 0.4,
+                    ease: "power2.out"
+                });
+            });
+            
+            magnet.addEventListener('mouseleave', (e) => {
+                gsap.to(magnet, {
+                    duration: 0.3,
+                    x: 0,
+                    y: 0,
+                    ease: "elastic.out(1, 0.3)"
+                });
+            });
+        });
+
+        // Simple Fade-in for Cards
+        gsap.from(".bento-card", {
+            scrollTrigger: "#work",
+            y: 50,
+            opacity: 0,
+            duration: 1,
+            stagger: 0.2
+        });
+    </script>
 </body>
 </html>
