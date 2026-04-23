@@ -2,7 +2,7 @@
 <html lang="nl" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Zelf | High-End Webdesign</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -20,7 +20,10 @@
             background-color: #050505; 
             color: #f5f5f5; 
             font-family: 'Inter', sans-serif; 
-            overflow-x: hidden; 
+            overflow-x: hidden;
+            /* iOS Safari fix voor hoogte */
+            min-height: 100vh;
+            min-height: 100dvh;
         }
 
         .text-silver { 
@@ -29,170 +32,156 @@
             -webkit-text-fill-color: transparent; 
         }
 
-        /* Bento & Pricing Cards */
+        /* iOS Form Fixes */
+        input, textarea, button {
+            -webkit-appearance: none;
+            border-radius: 0;
+        }
+
+        /* Cards & Performance */
         .bento-card, .price-card {
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(12px);
-            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            -webkit-backdrop-filter: blur(12px);
+            will-change: transform, opacity;
         }
 
-        .price-card:hover {
-            border-color: rgba(255, 255, 255, 0.4);
-            box-shadow: 0 0 30px rgba(184, 198, 219, 0.1);
-            transform: translateY(-10px);
+        @media (min-width: 768px) {
+            .price-card:hover {
+                border-color: rgba(255, 255, 255, 0.4);
+                box-shadow: 0 0 30px rgba(184, 198, 219, 0.1);
+                transform: translateY(-10px);
+            }
         }
 
         .hidden-section { display: none; opacity: 0; }
 
-        /* Pricing Details */
-        .feature-icon { color: #b8c6db; }
-        .most-wanted-tag {
-            background: var(--silver);
-            color: #000;
-            padding: 4px 12px;
-            border-radius: 99px;
-            font-size: 10px;
-            font-weight: 900;
-            position: absolute;
-            top: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            text-transform: uppercase;
+        /* Shine Animatie (alleen op desktop voor batterijbesparing) */
+        @media (min-width: 1024px) {
+            .shine { position: relative; overflow: hidden; }
+            .shine::after {
+                content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+                background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+                transform: rotate(45deg); pointer-events: none;
+            }
+            .shine:hover::after { animation: sweep 0.8s ease-in-out; }
         }
-
-        /* Shine Animatie */
-        .shine { position: relative; overflow: hidden; }
-        .shine::after {
-            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
-            transform: rotate(45deg); pointer-events: none;
-        }
-        .shine:hover::after { animation: sweep 0.8s ease-in-out; }
         @keyframes sweep {
             0% { transform: translate(-100%, -100%) rotate(45deg); }
             100% { transform: translate(100%, 100%) rotate(45deg); }
         }
 
         .file-chip { background: rgba(255,255,255,0.05); border: 1px solid #333; padding: 4px 12px; border-radius: 99px; font-size: 12px; display: flex; align-items: center; gap: 8px; }
-        textarea { background: transparent; border: 1px solid #1f1f1f; resize: none; transition: border-color 0.5s; outline: none; }
-        textarea:focus { border-color: #f5f7fa; }
     </style>
 </head>
 <body>
 
-    <nav class="flex justify-between items-center p-8 max-w-7xl mx-auto relative z-50">
+    <nav class="flex justify-between items-center p-6 md:p-8 max-w-7xl mx-auto relative z-50">
         <a href="index.html">
-            <img src="Afbeeldingen/ZELF.png" alt="Zelf Logo" style="height: 30px; width: auto;">
+            <img src="Afbeeldingen/ZELF.png" alt="Zelf Logo" class="h-6 md:h-8 w-auto">
         </a>
-        <div class="space-x-8 text-[10px] uppercase tracking-[0.3em] hidden md:flex items-center">
-            <a href="#work" class="hover:text-gray-400 transition">Work</a>
-            <button onclick="startProjectFlow()" class="magnetic bg-white text-black px-6 py-2 rounded-full font-bold shine">Contact</button>
-        </div>
+        <button onclick="startProjectFlow()" class="btn-tap md:magnetic bg-white text-black px-5 py-2 md:px-6 md:py-2 rounded-full font-bold text-xs md:text-sm shine">Contact</button>
     </nav>
 
-    <main id="main-content" class="max-w-7xl mx-auto px-6">
+    <main id="main-content" class="max-w-7xl mx-auto px-4 md:px-6">
         
         <div id="home-wrapper">
-            <section id="hero-section" class="flex flex-col items-center justify-center min-h-[70vh] text-center">
-                <h1 class="text-6xl md:text-9xl font-black mb-6 italic tracking-tighter text-silver">ZELF.</h1>
-                <p class="max-w-xl text-gray-500 text-lg mb-10 leading-relaxed">
+            <section id="hero-section" class="flex flex-col items-center justify-center min-h-[60vh] md:min-h-[70vh] text-center">
+                <h1 class="text-5xl md:text-9xl font-black mb-6 italic tracking-tighter text-silver">ZELF.</h1>
+                <p class="max-w-md md:max-w-xl text-gray-500 text-sm md:text-lg mb-8 md:mb-10 leading-relaxed">
                     Jouw visie, vertaald in een digitale ervaring. Wij bouwen de toekomst van het web.
                 </p>
-                <div class="flex gap-6">
-                    <button onclick="startProjectFlow()" class="magnetic px-8 py-4 bg-white text-black rounded-xl font-bold shine">Start jouw project</button>
-                    <a href="#work" class="magnetic px-8 py-4 border border-gray-800 rounded-xl font-bold hover:bg-gray-900 transition flex items-center">Bekijk portfolio</a>
+                <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto">
+                    <button onclick="startProjectFlow()" class="btn-tap md:magnetic px-8 py-4 bg-white text-black rounded-xl font-bold shine w-full md:w-auto">Start jouw project</button>
+                    <a href="#work" class="btn-tap md:magnetic px-8 py-4 border border-gray-800 rounded-xl font-bold hover:bg-gray-900 transition flex justify-center items-center w-full md:w-auto">Bekijk portfolio</a>
                 </div>
             </section>
 
-            <section id="work" class="py-24">
-                <h2 class="text-3xl font-bold mb-12 uppercase tracking-tighter italic">Geselecteerd Werk</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-[300px]">
-                    <div class="bento-card md:col-span-2 md:row-span-2 rounded-[2.5rem] p-10 flex flex-col justify-end relative overflow-hidden group">
-                        <div class="absolute top-8 right-8 opacity-20 group-hover:opacity-100 transition">01</div>
-                        <h3 class="text-4xl font-black italic text-silver">AURA</h3>
-                        <p class="text-gray-500">Luxe Fashion House</p>
+            <section id="work" class="py-12 md:py-24">
+                <h2 class="text-2xl md:text-3xl font-bold mb-8 md:mb-12 uppercase tracking-tighter italic">Geselecteerd Werk</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-[250px] md:auto-rows-[300px]">
+                    <div class="bento-card md:col-span-2 md:row-span-2 rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 flex flex-col justify-end relative overflow-hidden group">
+                        <h3 class="text-3xl md:text-4xl font-black italic text-silver">AURA</h3>
+                        <p class="text-gray-500 text-sm md:text-base">Luxe Fashion House</p>
                     </div>
-                    <div class="bento-card rounded-[2.5rem] p-10 flex flex-col justify-end relative group">
-                        <div class="absolute top-8 right-8 opacity-20 group-hover:opacity-100 transition">02</div>
-                        <h3 class="text-2xl font-bold text-silver italic">NEO</h3>
-                        <p class="text-gray-500 text-sm">FinTech Solution</p>
+                    <div class="bento-card rounded-[2rem] p-6 md:p-10 flex flex-col justify-end relative">
+                        <h3 class="text-xl md:text-2xl font-bold text-silver italic">NEO</h3>
+                        <p class="text-gray-500 text-xs md:text-sm">FinTech Solution</p>
                     </div>
-                    <div class="bento-card rounded-[2.5rem] p-10 flex flex-col justify-end relative group">
-                        <div class="absolute top-8 right-8 opacity-20 group-hover:opacity-100 transition">03</div>
-                        <h3 class="text-2xl font-bold text-silver italic">MONOLITH</h3>
-                        <p class="text-gray-500 text-sm">Architecture</p>
+                    <div class="bento-card rounded-[2rem] p-6 md:p-10 flex flex-col justify-end relative">
+                        <h3 class="text-xl md:text-2xl font-bold text-silver italic">MONOLITH</h3>
+                        <p class="text-gray-500 text-xs md:text-sm">Architecture</p>
                     </div>
                 </div>
             </section>
         </div>
 
-        <section id="pricing-step" class="hidden-section py-20 w-full max-w-6xl mx-auto">
-            <div class="text-center mb-16">
-                <h2 class="text-silver text-5xl font-black italic mb-4 tracking-tighter uppercase">Kies een startpunt</h2>
+        <section id="pricing-step" class="hidden-section py-12 md:py-20 w-full max-w-6xl mx-auto">
+            <div class="text-center mb-10 md:mb-16">
+                <h2 class="text-silver text-3xl md:text-5xl font-black italic mb-4 tracking-tighter uppercase">Kies een startpunt</h2>
             </div>
-            <div id="cards-container" class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="price-card p-10 rounded-[2.5rem] flex flex-col" data-plan="Basic">
-                    <h3 class="text-2xl font-black italic mb-6">Basic</h3>
-                    <ul class="space-y-4 mb-8">
-                        <li class="flex items-center gap-3 text-sm text-[#a1a1a1]"><i data-lucide="check" class="w-4 h-4 feature-icon"></i> Single-page design</li>
-                        <li class="flex items-center gap-3 text-sm text-[#a1a1a1]"><i data-lucide="check" class="w-4 h-4 feature-icon"></i> Mobile responsive</li>
-                        <li class="flex items-center gap-3 text-sm text-[#a1a1a1]"><i data-lucide="check" class="w-4 h-4 feature-icon"></i> Levering binnen 7 dagen</li>
+            <div id="cards-container" class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+                <div class="price-card p-8 md:p-10 rounded-[2rem] flex flex-col" data-plan="Basic">
+                    <h3 class="text-xl md:text-2xl font-black italic mb-4">Basic</h3>
+                    <ul class="space-y-3 mb-8 text-sm text-[#a1a1a1]">
+                        <li class="flex items-center gap-3"><i data-lucide="check" class="w-4 h-4 text-[#b8c6db]"></i> Single-page design</li>
+                        <li class="flex items-center gap-3"><i data-lucide="check" class="w-4 h-4 text-[#b8c6db]"></i> Mobile responsive</li>
                     </ul>
                     <div class="mt-auto">
-                        <div class="text-3xl font-black mb-6 italic">€ 950,-</div>
-                        <button onclick="handleSelection(this)" class="w-full py-4 border border-gray-800 rounded-2xl hover:bg-white hover:text-black transition-all font-bold shine">Selecteer</button>
+                        <div class="text-2xl font-black mb-4">€ 950,-</div>
+                        <button onclick="handleSelection(this)" class="btn-tap w-full py-4 border border-gray-800 rounded-2xl font-bold">Selecteer</button>
                     </div>
                 </div>
-                <div class="price-card p-10 rounded-[2.5rem] flex flex-col border-gray-500 relative" data-plan="Professional">
+
+                <div class="price-card p-8 md:p-10 rounded-[2rem] flex flex-col border-gray-500 relative" data-plan="Professional">
                     <span class="most-wanted-tag">Most Wanted</span>
-                    <h3 class="text-2xl font-black italic mb-6 text-silver">Professional</h3>
-                    <ul class="space-y-4 mb-8">
-                        <li class="flex items-center gap-3 text-sm text-[#a1a1a1]"><i data-lucide="check" class="w-4 h-4 feature-icon"></i> Tot 5 pagina's</li>
-                        <li class="flex items-center gap-3 text-sm text-[#a1a1a1]"><i data-lucide="check" class="w-4 h-4 feature-icon"></i> Custom animaties</li>
-                        <li class="flex items-center gap-3 text-sm text-[#a1a1a1]"><i data-lucide="check" class="w-4 h-4 feature-icon"></i> CMS integratie</li>
+                    <h3 class="text-xl md:text-2xl font-black italic mb-4 text-silver">Professional</h3>
+                    <ul class="space-y-3 mb-8 text-sm text-[#a1a1a1]">
+                        <li class="flex items-center gap-3"><i data-lucide="check" class="w-4 h-4 text-[#b8c6db]"></i> Tot 5 pagina's</li>
+                        <li class="flex items-center gap-3"><i data-lucide="check" class="w-4 h-4 text-[#b8c6db]"></i> Custom animaties</li>
                     </ul>
                     <div class="mt-auto">
-                        <div class="text-3xl font-black mb-6 italic text-silver">€ 1.950,-</div>
-                        <button onclick="handleSelection(this)" class="w-full py-4 bg-white text-black rounded-2xl font-bold shine">Selecteer</button>
+                        <div class="text-2xl font-black mb-4 text-silver">€ 1.950,-</div>
+                        <button onclick="handleSelection(this)" class="btn-tap w-full py-4 bg-white text-black rounded-2xl font-bold">Selecteer</button>
                     </div>
                 </div>
-                <div class="price-card p-10 rounded-[2.5rem] flex flex-col" data-plan="Enterprise">
-                    <h3 class="text-2xl font-black italic mb-6">Enterprise</h3>
-                    <ul class="space-y-4 mb-8">
-                        <li class="flex items-center gap-3 text-sm text-[#a1a1a1]"><i data-lucide="check" class="w-4 h-4 feature-icon"></i> Full Web-App</li>
-                        <li class="flex items-center gap-3 text-sm text-[#a1a1a1]"><i data-lucide="check" class="w-4 h-4 feature-icon"></i> 24/7 Priority Support</li>
-                        <li class="flex items-center gap-3 text-sm text-[#a1a1a1]"><i data-lucide="check" class="w-4 h-4 feature-icon"></i> Onbeperkte revisies</li>
+
+                <div class="price-card p-8 md:p-10 rounded-[2rem] flex flex-col" data-plan="Enterprise">
+                    <h3 class="text-xl md:text-2xl font-black italic mb-4">Enterprise</h3>
+                    <ul class="space-y-3 mb-8 text-sm text-[#a1a1a1]">
+                        <li class="flex items-center gap-3"><i data-lucide="check" class="w-4 h-4 text-[#b8c6db]"></i> Full Web-App</li>
+                        <li class="flex items-center gap-3"><i data-lucide="check" class="w-4 h-4 text-[#b8c6db]"></i> 24/7 Support</li>
                     </ul>
                     <div class="mt-auto">
-                        <div class="text-3xl font-black mb-6 italic">Custom</div>
-                        <button onclick="handleSelection(this)" class="w-full py-4 border border-gray-800 rounded-2xl hover:bg-white hover:text-black transition-all font-bold shine">Selecteer</button>
+                        <div class="text-2xl font-black mb-4">Custom</div>
+                        <button onclick="handleSelection(this)" class="btn-tap w-full py-4 border border-gray-800 rounded-2xl font-bold">Selecteer</button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="briefing-step" class="hidden-section py-20 w-full max-w-4xl mx-auto">
-            <h2 class="text-5xl font-black italic tracking-tighter text-silver mb-8 uppercase">Project Briefing</h2>
-            <div class="space-y-8">
-                <textarea id="project-desc" rows="8" class="w-full p-8 rounded-[2rem] text-xl" placeholder="Wat is je visie?"></textarea>
-                <div class="flex flex-wrap items-center gap-4">
-                    <label class="cursor-pointer flex items-center gap-3 px-6 py-3 border border-gray-800 rounded-full hover:bg-gray-900 transition">
+        <section id="briefing-step" class="hidden-section py-12 md:py-20 w-full max-w-4xl mx-auto">
+            <h2 class="text-3xl md:text-5xl font-black italic tracking-tighter text-silver mb-6 uppercase">Briefing</h2>
+            <div class="space-y-6">
+                <textarea id="project-desc" rows="6" class="w-full p-6 md:p-8 rounded-[1.5rem] md:rounded-[2rem] text-base md:text-xl" placeholder="Wat is je visie?"></textarea>
+                <div class="flex flex-col md:flex-row items-start md:items-center gap-4">
+                    <label class="cursor-pointer flex items-center gap-3 px-6 py-3 border border-gray-800 rounded-full w-full md:w-auto justify-center">
                         <input type="file" id="file-input" multiple class="hidden" onchange="handleFiles(this.files)">
-                        <span class="text-xs uppercase tracking-widest font-bold">Bijlagen toevoegen</span>
+                        <span class="text-[10px] uppercase tracking-widest font-bold">Bestanden</span>
                     </label>
                     <div id="file-list" class="flex flex-wrap gap-2"></div>
                 </div>
-                <button onclick="finalSubmit()" class="px-12 py-5 bg-white text-black rounded-2xl font-black uppercase italic tracking-tighter shine">Verstuur Aanvraag →</button>
+                <button onclick="finalSubmit()" class="btn-tap w-full md:w-auto px-12 py-5 bg-white text-black rounded-2xl font-black uppercase italic tracking-tighter">Verstuur →</button>
             </div>
         </section>
     </main>
 
     <script>
-        // Init Icons
         lucide.createIcons();
+        let mm = gsap.matchMedia();
 
-        // Step Flow
+        // Stap Flow Functies (Blijven hetzelfde)
         function startProjectFlow() {
             const home = document.getElementById('home-wrapper');
             const pricing = document.getElementById('pricing-step');
@@ -200,54 +189,77 @@
                 home.style.display = 'none';
                 pricing.style.display = 'block';
                 gsap.to(pricing, { opacity: 1, y: 0, duration: 0.8 });
+                window.scrollTo(0,0);
             }});
         }
 
         function handleSelection(btn) {
-            const selectedCard = btn.parentElement.parentElement;
+            const selectedCard = btn.closest('.price-card');
             const allCards = document.querySelectorAll('.price-card');
             const briefing = document.getElementById('briefing-step');
 
-            allCards.forEach(card => { if (card !== selectedCard) gsap.to(card, { opacity: 0, scale: 0.9, duration: 0.4 }); });
+            allCards.forEach(card => { if (card !== selectedCard) gsap.to(card, { opacity: 0, scale: 0.9, duration: 0.3 }); });
 
-            const rect = selectedCard.getBoundingClientRect();
-            const centerX = window.innerWidth / 2 - rect.left - rect.width / 2;
-            const centerY = window.innerHeight / 2 - rect.top - rect.height / 2;
+            // Op mobiel slaan we de gecentreerde animatie over voor snelheid, op desktop behouden we hem
+            mm.add("(min-width: 768px)", () => {
+                const rect = selectedCard.getBoundingClientRect();
+                const centerX = window.innerWidth / 2 - rect.left - rect.width / 2;
+                const centerY = window.innerHeight / 2 - rect.top - rect.height / 2;
+                gsap.to(selectedCard, { x: centerX, y: centerY, scale: 1.05, duration: 0.8, ease: "power4.inOut" });
+            });
 
-            gsap.to(selectedCard, { x: centerX, y: centerY, scale: 1.05, duration: 0.8, ease: "power4.inOut", onComplete: () => {
-                gsap.to(selectedCard, { opacity: 0, duration: 0.4, delay: 0.2, onComplete: () => {
-                    document.getElementById('pricing-step').style.display = 'none';
-                    briefing.style.display = 'block';
-                    gsap.to(briefing, { opacity: 1, y: 0, duration: 0.8 });
-                }});
+            gsap.to(selectedCard, { opacity: 0, duration: 0.4, delay: 0.6, onComplete: () => {
+                document.getElementById('pricing-step').style.display = 'none';
+                briefing.style.display = 'block';
+                gsap.to(briefing, { opacity: 1, y: 0, duration: 0.8 });
+                window.scrollTo(0,0);
             }});
         }
 
+        // Responsive Interactivity Script
+        mm.add({
+            isDesktop: "(min-width: 768px)",
+            isMobile: "(max-width: 767px)"
+        }, (context) => {
+            let { isDesktop, isMobile } = context.conditions;
+
+            if (isDesktop) {
+                // Magnetic Buttons Alleen op Desktop
+                document.querySelectorAll('.magnetic').forEach(m => {
+                    m.addEventListener('mousemove', e => {
+                        const r = m.getBoundingClientRect();
+                        gsap.to(m, { x: (e.clientX - (r.left + r.width/2)) * 0.3, y: (e.clientY - (r.top + r.height/2)) * 0.3, duration: 0.3 });
+                    });
+                    m.addEventListener('mouseleave', () => gsap.to(m, { x: 0, y: 0, duration: 0.3 }));
+                });
+            }
+
+            if (isMobile) {
+                // Simpele Tap Animatie voor Mobiel
+                document.querySelectorAll('.btn-tap').forEach(btn => {
+                    btn.addEventListener('touchstart', () => gsap.to(btn, { scale: 0.95, duration: 0.1 }));
+                    btn.addEventListener('touchend', () => gsap.to(btn, { scale: 1, duration: 0.1 }));
+                });
+            }
+        });
+
+        // File & Submit Handlers (Blijven hetzelfde)
         function handleFiles(files) {
             const list = document.getElementById('file-list');
             for (let file of files) {
                 const chip = document.createElement('div');
                 chip.className = 'file-chip text-silver';
-                chip.innerHTML = `<span>${file.name}</span>`;
+                chip.innerHTML = `<span>${file.name.substring(0,10)}...</span>`;
                 list.appendChild(chip);
             }
         }
 
         function finalSubmit() {
-            gsap.to('main', { opacity: 0, duration: 0.8, onComplete: () => {
-                alert("Aanvraag succesvol verzonden!");
+            gsap.to('main', { opacity: 0, duration: 0.5, onComplete: () => {
+                alert("Verzonden!");
                 location.reload();
             }});
         }
-
-        // Magnetic
-        document.querySelectorAll('.magnetic').forEach(m => {
-            m.addEventListener('mousemove', e => {
-                const r = m.getBoundingClientRect();
-                gsap.to(m, { x: (e.clientX - (r.left + r.width/2)) * 0.3, y: (e.clientY - (r.top + r.height/2)) * 0.3, duration: 0.3 });
-            });
-            m.addEventListener('mouseleave', () => gsap.to(m, { x: 0, y: 0, duration: 0.3 }));
-        });
     </script>
 </body>
 </html>
