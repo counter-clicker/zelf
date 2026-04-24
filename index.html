@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Zelf | High-End Webdesign</title>
+    <title>Zelf | Project Configurator</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -13,252 +13,690 @@
     <style>
         :root {
             --silver: linear-gradient(135deg, #f5f7fa 0%, #b8c6db 50%, #f5f7fa 100%);
-            --silver-text: #a1a1a1;
+            --silver-line: linear-gradient(90deg, transparent, #b8c6db 40%, #e8edf5 60%, transparent);
+            --silver-glow: rgba(184, 198, 219, 0.25);
+            --silver-glow-strong: rgba(184, 198, 219, 0.4);
         }
-        
-        body { 
-            background-color: #050505; 
-            color: #f5f5f5; 
-            font-family: 'Inter', sans-serif; 
+
+        * { box-sizing: border-box; }
+
+        body {
+            background-color: #050505;
+            color: #f5f5f5;
+            font-family: 'Inter', sans-serif;
             overflow-x: hidden;
-            /* iOS Safari fix voor hoogte */
-            min-height: 100vh;
             min-height: 100dvh;
         }
 
-        .text-silver { 
-            background: var(--silver); 
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent; 
+        .text-silver {
+            background: var(--silver);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        /* iOS Form Fixes */
-        input, textarea, button {
-            -webkit-appearance: none;
-            border-radius: 0;
+        /* NAV */
+        nav {
+            position: sticky; top: 0; z-index: 100;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            background: rgba(5,5,5,0.88);
+            border-bottom: 1px solid rgba(255,255,255,0.045);
         }
 
-        /* Cards & Performance */
-        .bento-card, .price-card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            will-change: transform, opacity;
+        /* SECTION HEADER */
+        .section-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.575rem;
+            font-weight: 700;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: #4b5563;
+            margin-bottom: 1.5rem;
+        }
+        .section-eyebrow::before,
+        .section-eyebrow::after {
+            content: '';
+            display: block;
+            width: 1.25rem;
+            height: 1px;
+        }
+        .section-eyebrow::before { background: linear-gradient(90deg, transparent, #4b5563); }
+        .section-eyebrow::after  { background: linear-gradient(90deg, #4b5563, transparent); }
+
+        .pricing-heading {
+            font-size: clamp(2.75rem, 11vw, 5.75rem);
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: -0.04em;
+            line-height: 0.9;
+            text-transform: uppercase;
         }
 
+        /* Thin divider */
+        .silver-rule {
+            height: 1px;
+            background: var(--silver-line);
+            margin: 2.5rem 0;
+            opacity: 0.3;
+        }
+
+        /* CARDS GRID */
+        .cards-wrapper {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.875rem;
+        }
         @media (min-width: 768px) {
+            .cards-wrapper {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1.125rem;
+                align-items: start;
+            }
+        }
+
+        /* CARD */
+        .price-card {
+            background: rgba(255,255,255,0.018);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 1.625rem;
+            padding: 1.625rem;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            cursor: pointer;
+            will-change: transform, border-color, box-shadow;
+            transition:
+                border-color 0.35s cubic-bezier(0.16,1,0.3,1),
+                box-shadow   0.35s cubic-bezier(0.16,1,0.3,1),
+                background   0.35s,
+                transform    0.4s  cubic-bezier(0.175,0.885,0.32,1.275);
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            overflow: hidden;
+        }
+
+        /* top shine line */
+        .price-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 15%; right: 15%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(184,198,219,0.15), transparent);
+            transition: opacity 0.4s;
+        }
+
+        @media (hover: hover) {
             .price-card:hover {
-                border-color: rgba(255, 255, 255, 0.4);
-                box-shadow: 0 0 30px rgba(184, 198, 219, 0.1);
-                transform: translateY(-10px);
+                border-color: rgba(255,255,255,0.16);
+                box-shadow: 0 8px 40px -12px var(--silver-glow);
             }
         }
+        .price-card:active { transform: scale(0.983); }
 
-        .hidden-section { display: none; opacity: 0; }
+        .price-card.selected {
+            border-color: rgba(255,255,255,0.32);
+            background: rgba(255,255,255,0.038);
+            box-shadow:
+                0 0 0 1px rgba(255,255,255,0.08),
+                0 20px 60px -20px var(--silver-glow-strong),
+                inset 0 1px 0 rgba(255,255,255,0.065);
+        }
+        .price-card.selected::before {
+            background: linear-gradient(90deg, transparent, rgba(184,198,219,0.45), transparent);
+        }
+        @media (min-width: 768px) {
+            .price-card.selected { transform: translateY(-8px); }
+        }
 
-        /* Shine Animatie (alleen op desktop voor batterijbesparing) */
-        @media (min-width: 1024px) {
-            .shine { position: relative; overflow: hidden; }
-            .shine::after {
-                content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-                background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
-                transform: rotate(45deg); pointer-events: none;
+        /* Pro card slight default glow */
+        .card-pro { border-color: rgba(255,255,255,0.11); }
+
+        /* Badge */
+        .pill-badge {
+            position: absolute;
+            top: -0.7rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #fff;
+            color: #000;
+            padding: 0.18rem 0.9rem;
+            border-radius: 999px;
+            font-size: 0.5rem;
+            font-weight: 900;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            white-space: nowrap;
+            box-shadow: 0 2px 12px rgba(255,255,255,0.18);
+        }
+
+        /* Card number */
+        .card-num {
+            font-size: 0.5rem;
+            font-weight: 700;
+            letter-spacing: 0.28em;
+            color: rgba(255,255,255,0.13);
+            text-transform: uppercase;
+            margin-bottom: 1.1rem;
+        }
+
+        /* Title row */
+        .card-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.35rem;
+        }
+        .card-title {
+            font-size: 1.625rem;
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: -0.02em;
+            line-height: 1;
+        }
+        .card-starting {
+            font-size: 0.525rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            color: #4b5563;
+            text-transform: uppercase;
+            margin-top: 0.375rem;
+        }
+
+        /* Features */
+        .feat-wrap { margin: 1.4rem 0; flex: 1; }
+        .feat-label {
+            font-size: 0.48rem;
+            font-weight: 700;
+            letter-spacing: 0.25em;
+            color: #374151;
+            text-transform: uppercase;
+            margin-bottom: 0.6rem;
+        }
+        .feat-row {
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+            padding: 0.3rem 0;
+            font-size: 0.8rem;
+            color: #6b7280;
+            border-bottom: 1px solid rgba(255,255,255,0.025);
+            transition: color 0.3s;
+        }
+        .feat-row:last-child { border-bottom: none; }
+        .feat-row svg { width: 0.7rem; height: 0.7rem; flex-shrink: 0; color: #374151; transition: color 0.3s; }
+        .price-card.selected .feat-row { color: #9ca3af; }
+        .price-card.selected .feat-row svg { color: #6b7280; }
+
+        /* Addons */
+        .addons-wrap {
+            border-top: 1px solid rgba(255,255,255,0.045);
+            padding-top: 1.1rem;
+        }
+        .addon-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            cursor: pointer;
+            min-height: 40px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .addon-left { display: flex; align-items: center; gap: 0.55rem; }
+        .addon-check {
+            width: 0.9rem; height: 0.9rem;
+            border: 1px solid rgba(255,255,255,0.13);
+            border-radius: 3px;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.22s;
+            flex-shrink: 0;
+        }
+        .addon-check svg { width: 0.5rem; height: 0.5rem; opacity: 0; transition: opacity 0.18s; }
+        .addon-row.active .addon-check { background: #fff; border-color: #fff; color: #000; }
+        .addon-row.active .addon-check svg { opacity: 1; }
+        .addon-name { font-size: 0.75rem; color: #6b7280; }
+        .addon-price-tag { font-size: 0.52rem; color: #374151; letter-spacing: 0.08em; }
+
+        /* Live price */
+        .price-live {
+            margin-top: 1.4rem;
+            display: flex;
+            align-items: baseline;
+            gap: 0.25rem;
+        }
+        .price-live-amount {
+            font-size: 2rem;
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: -0.03em;
+            background: var(--silver);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .price-live-suffix {
+            font-size: 0.55rem;
+            color: #374151;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+        }
+
+        /* CTA */
+        .select-btn {
+            margin-top: 1.4rem;
+            width: 100%;
+            padding: 0.85rem;
+            background: #fff;
+            color: #000;
+            font-weight: 900;
+            font-size: 0.6rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(8px);
+            transition:
+                opacity 0.38s cubic-bezier(0.16,1,0.3,1),
+                transform 0.38s cubic-bezier(0.16,1,0.3,1),
+                box-shadow 0.22s;
+            will-change: opacity, transform;
+            min-height: 48px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .select-btn.visible { opacity: 1; transform: translateY(0); }
+        .select-btn::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -80%;
+            width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0,0,0,0.07), transparent);
+            transform: skewX(-12deg);
+        }
+        .select-btn:hover::after {
+            animation: shimmer 0.55s cubic-bezier(0.16,1,0.3,1) forwards;
+        }
+        @keyframes shimmer { to { left: 160%; } }
+        @media (hover: hover) {
+            .select-btn:hover {
+                box-shadow: 0 4px 20px rgba(255,255,255,0.22);
+                transform: translateY(-2px) !important;
             }
-            .shine:hover::after { animation: sweep 0.8s ease-in-out; }
         }
-        @keyframes sweep {
-            0% { transform: translate(-100%, -100%) rotate(45deg); }
-            100% { transform: translate(100%, 100%) rotate(45deg); }
+        .select-btn:active { transform: scale(0.97) !important; }
+
+        /* Bottom trust line */
+        .trust-row {
+            margin-top: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.25rem;
+            opacity: 0.28;
+        }
+        .trust-row span { font-size: 0.525rem; letter-spacing: 0.2em; text-transform: uppercase; }
+        .trust-dot { width: 2px; height: 2px; background: #6b7280; border-radius: 50%; }
+
+        /* BRIEFING */
+        #briefing-step {
+            display: block;
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            pointer-events: none;
+            top: 0; left: 0; right: 0;
+            will-change: opacity, transform;
+        }
+        #briefing-step.active {
+            position: relative;
+            visibility: visible;
+            pointer-events: auto;
         }
 
-        .file-chip { background: rgba(255,255,255,0.05); border: 1px solid #333; padding: 4px 12px; border-radius: 99px; font-size: 12px; display: flex; align-items: center; gap: 8px; }
+        textarea {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.07);
+            resize: none;
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+        }
+        textarea:focus {
+            border-color: rgba(255,255,255,0.22);
+            box-shadow: 0 0 24px rgba(255,255,255,0.04);
+        }
+        .btn-main {
+            background: #fff; color: #000; font-weight: 900;
+            transition: 0.3s; overflow: hidden; position: relative;
+        }
+        .btn-main:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(255,255,255,0.2); }
     </style>
 </head>
 <body>
 
-    <nav class="flex justify-between items-center p-6 md:p-8 max-w-7xl mx-auto relative z-50">
-        <a href="index.html">
-            <img src="Afbeeldingen/ZELF.png" alt="Zelf Logo" class="h-6 md:h-8 w-auto">
-        </a>
-        <button onclick="startProjectFlow()" class="btn-tap md:magnetic bg-white text-black px-5 py-2 md:px-6 md:py-2 rounded-full font-bold text-xs md:text-sm shine">Contact</button>
+    <nav class="flex justify-between items-center px-6 py-5 max-w-7xl mx-auto">
+        <a href="index.html"><img src="Afbeeldingen/ZELF.png" alt="ZELF" class="h-6 md:h-8"></a>
+        <button onclick="window.location.reload()" class="text-[10px] uppercase tracking-widest opacity-30 hover:opacity-100 transition-opacity min-h-[44px] px-2">Reset</button>
     </nav>
 
-    <main id="main-content" class="max-w-7xl mx-auto px-4 md:px-6">
-        
-        <div id="home-wrapper">
-            <section id="hero-section" class="flex flex-col items-center justify-center min-h-[60vh] md:min-h-[70vh] text-center">
-                <h1 class="text-5xl md:text-9xl font-black mb-6 italic tracking-tighter text-silver">ZELF.</h1>
-                <p class="max-w-md md:max-w-xl text-gray-500 text-sm md:text-lg mb-8 md:mb-10 leading-relaxed">
-                    Jouw visie, vertaald in een digitale ervaring. Wij bouwen de toekomst van het web.
+    <main class="max-w-7xl mx-auto px-5">
+
+        <!-- ════════════ STAP 1 — PRICING ════════════ -->
+        <section id="pricing-step" class="pt-8 pb-20">
+
+            <!-- Header -->
+            <div class="text-center mb-10">
+                <div class="section-eyebrow">Stap 01 — Fundament</div>
+                <h2 class="pricing-heading text-silver mb-5">
+                    Kies een<br>startpunt.
+                </h2>
+                <p class="text-gray-600 text-sm max-w-xs mx-auto leading-relaxed" style="font-size:0.8125rem;">
+                    Selecteer een basis, voeg opties toe.<br>Wij bouwen wat jij voor ogen hebt.
                 </p>
-                <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto">
-                    <button onclick="startProjectFlow()" class="btn-tap md:magnetic px-8 py-4 bg-white text-black rounded-xl font-bold shine w-full md:w-auto">Start jouw project</button>
-                    <a href="#work" class="btn-tap md:magnetic px-8 py-4 border border-gray-800 rounded-xl font-bold hover:bg-gray-900 transition flex justify-center items-center w-full md:w-auto">Bekijk portfolio</a>
-                </div>
-            </section>
-
-            <section id="work" class="py-12 md:py-24">
-                <h2 class="text-2xl md:text-3xl font-bold mb-8 md:mb-12 uppercase tracking-tighter italic">Geselecteerd Werk</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-[250px] md:auto-rows-[300px]">
-                    <div class="bento-card md:col-span-2 md:row-span-2 rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 flex flex-col justify-end relative overflow-hidden group">
-                        <h3 class="text-3xl md:text-4xl font-black italic text-silver">AURA</h3>
-                        <p class="text-gray-500 text-sm md:text-base">Luxe Fashion House</p>
-                    </div>
-                    <div class="bento-card rounded-[2rem] p-6 md:p-10 flex flex-col justify-end relative">
-                        <h3 class="text-xl md:text-2xl font-bold text-silver italic">NEO</h3>
-                        <p class="text-gray-500 text-xs md:text-sm">FinTech Solution</p>
-                    </div>
-                    <div class="bento-card rounded-[2rem] p-6 md:p-10 flex flex-col justify-end relative">
-                        <h3 class="text-xl md:text-2xl font-bold text-silver italic">MONOLITH</h3>
-                        <p class="text-gray-500 text-xs md:text-sm">Architecture</p>
-                    </div>
-                </div>
-            </section>
-        </div>
-
-        <section id="pricing-step" class="hidden-section py-12 md:py-20 w-full max-w-6xl mx-auto">
-            <div class="text-center mb-10 md:mb-16">
-                <h2 class="text-silver text-3xl md:text-5xl font-black italic mb-4 tracking-tighter uppercase">Kies een startpunt</h2>
             </div>
-            <div id="cards-container" class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-                <div class="price-card p-8 md:p-10 rounded-[2rem] flex flex-col" data-plan="Basic">
-                    <h3 class="text-xl md:text-2xl font-black italic mb-4">Basic</h3>
-                    <ul class="space-y-3 mb-8 text-sm text-[#a1a1a1]">
-                        <li class="flex items-center gap-3"><i data-lucide="check" class="w-4 h-4 text-[#b8c6db]"></i> Single-page design</li>
-                        <li class="flex items-center gap-3"><i data-lucide="check" class="w-4 h-4 text-[#b8c6db]"></i> Mobile responsive</li>
-                    </ul>
-                    <div class="mt-auto">
-                        <div class="text-2xl font-black mb-4">€ 950,-</div>
-                        <button onclick="handleSelection(this)" class="btn-tap w-full py-4 border border-gray-800 rounded-2xl font-bold">Selecteer</button>
+
+            <div class="silver-rule"></div>
+
+            <!-- Cards -->
+            <div class="cards-wrapper">
+
+                <!-- BASIC -->
+                <div class="price-card" onclick="toggleSelection(this)">
+                    <div class="card-num">01 — Basic</div>
+                    <div class="card-title-row">
+                        <div>
+                            <div class="card-title">Basic</div>
+                            <div class="card-starting">Vanaf €950,—</div>
+                        </div>
+                        <i data-lucide="zap" style="width:1rem;height:1rem;color:#374151;flex-shrink:0;"></i>
                     </div>
+
+                    <div class="feat-wrap">
+                        <div class="feat-label">Inbegrepen</div>
+                        <div class="feat-row"><i data-lucide="check"></i>Single Page Design</div>
+                        <div class="feat-row"><i data-lucide="check"></i>Responsive Layout</div>
+                        <div class="feat-row"><i data-lucide="check"></i>Contact Formulier</div>
+                        <div class="feat-row"><i data-lucide="check"></i>2 Revisieronden</div>
+                    </div>
+
+                    <div class="addons-wrap">
+                        <div class="feat-label" style="margin-bottom:0.4rem;">Voeg toe</div>
+                        <div class="addon-row" onclick="toggleAddon(event,this,250)">
+                            <div class="addon-left">
+                                <div class="addon-check"><i data-lucide="check"></i></div>
+                                <span class="addon-name">Premium Animaties</span>
+                            </div>
+                            <span class="addon-price-tag">+€250</span>
+                        </div>
+                        <div class="addon-row" onclick="toggleAddon(event,this,150)">
+                            <div class="addon-left">
+                                <div class="addon-check"><i data-lucide="check"></i></div>
+                                <span class="addon-name">SEO Setup</span>
+                            </div>
+                            <span class="addon-price-tag">+€150</span>
+                        </div>
+                    </div>
+
+                    <div class="price-live">
+                        <span class="price-live-amount" data-base="950">€950</span>
+                        <span class="price-live-suffix">/ eenmalig</span>
+                    </div>
+
+                    <button class="select-btn" onclick="confirmPlan(event,'Basic',this)" tabindex="-1">
+                        Ga verder met Basic
+                    </button>
                 </div>
 
-                <div class="price-card p-8 md:p-10 rounded-[2rem] flex flex-col border-gray-500 relative" data-plan="Professional">
-                    <span class="most-wanted-tag">Most Wanted</span>
-                    <h3 class="text-xl md:text-2xl font-black italic mb-4 text-silver">Professional</h3>
-                    <ul class="space-y-3 mb-8 text-sm text-[#a1a1a1]">
-                        <li class="flex items-center gap-3"><i data-lucide="check" class="w-4 h-4 text-[#b8c6db]"></i> Tot 5 pagina's</li>
-                        <li class="flex items-center gap-3"><i data-lucide="check" class="w-4 h-4 text-[#b8c6db]"></i> Custom animaties</li>
-                    </ul>
-                    <div class="mt-auto">
-                        <div class="text-2xl font-black mb-4 text-silver">€ 1.950,-</div>
-                        <button onclick="handleSelection(this)" class="btn-tap w-full py-4 bg-white text-black rounded-2xl font-bold">Selecteer</button>
+                <!-- PRO -->
+                <div class="price-card card-pro" onclick="toggleSelection(this)">
+                    <div class="pill-badge">Most Wanted</div>
+                    <div class="card-num">02 — Pro</div>
+                    <div class="card-title-row">
+                        <div>
+                            <div class="card-title text-silver">Pro</div>
+                            <div class="card-starting">Vanaf €1.950,—</div>
+                        </div>
+                        <i data-lucide="layers" style="width:1rem;height:1rem;color:#9ca3af;flex-shrink:0;"></i>
                     </div>
+
+                    <div class="feat-wrap">
+                        <div class="feat-label">Inbegrepen</div>
+                        <div class="feat-row"><i data-lucide="check"></i>Tot 5 Pagina's</div>
+                        <div class="feat-row"><i data-lucide="check"></i>Custom Animaties</div>
+                        <div class="feat-row"><i data-lucide="check"></i>CMS Integratie</div>
+                        <div class="feat-row"><i data-lucide="check"></i>Analytics Dashboard</div>
+                        <div class="feat-row"><i data-lucide="check"></i>3 Revisieronden</div>
+                    </div>
+
+                    <div class="addons-wrap">
+                        <div class="feat-label" style="margin-bottom:0.4rem;">Voeg toe</div>
+                        <div class="addon-row" onclick="toggleAddon(event,this,400)">
+                            <div class="addon-left">
+                                <div class="addon-check"><i data-lucide="check"></i></div>
+                                <span class="addon-name">E-commerce</span>
+                            </div>
+                            <span class="addon-price-tag">+€400</span>
+                        </div>
+                        <div class="addon-row" onclick="toggleAddon(event,this,150)">
+                            <div class="addon-left">
+                                <div class="addon-check"><i data-lucide="check"></i></div>
+                                <span class="addon-name">SEO Optimalisatie</span>
+                            </div>
+                            <span class="addon-price-tag">+€150</span>
+                        </div>
+                        <div class="addon-row" onclick="toggleAddon(event,this,280)">
+                            <div class="addon-left">
+                                <div class="addon-check"><i data-lucide="check"></i></div>
+                                <span class="addon-name">Meertalig (i18n)</span>
+                            </div>
+                            <span class="addon-price-tag">+€280</span>
+                        </div>
+                    </div>
+
+                    <div class="price-live">
+                        <span class="price-live-amount" data-base="1950">€1.950</span>
+                        <span class="price-live-suffix">/ eenmalig</span>
+                    </div>
+
+                    <button class="select-btn" onclick="confirmPlan(event,'Professional',this)" tabindex="-1">
+                        Ga verder met Pro
+                    </button>
                 </div>
 
-                <div class="price-card p-8 md:p-10 rounded-[2rem] flex flex-col" data-plan="Enterprise">
-                    <h3 class="text-xl md:text-2xl font-black italic mb-4">Enterprise</h3>
-                    <ul class="space-y-3 mb-8 text-sm text-[#a1a1a1]">
-                        <li class="flex items-center gap-3"><i data-lucide="check" class="w-4 h-4 text-[#b8c6db]"></i> Full Web-App</li>
-                        <li class="flex items-center gap-3"><i data-lucide="check" class="w-4 h-4 text-[#b8c6db]"></i> 24/7 Support</li>
-                    </ul>
-                    <div class="mt-auto">
-                        <div class="text-2xl font-black mb-4">Custom</div>
-                        <button onclick="handleSelection(this)" class="btn-tap w-full py-4 border border-gray-800 rounded-2xl font-bold">Selecteer</button>
+                <!-- CUSTOM -->
+                <div class="price-card" onclick="toggleSelection(this)">
+                    <div class="card-num">03 — Custom</div>
+                    <div class="card-title-row">
+                        <div>
+                            <div class="card-title">Custom</div>
+                            <div class="card-starting">Op aanvraag</div>
+                        </div>
+                        <i data-lucide="cpu" style="width:1rem;height:1rem;color:#374151;flex-shrink:0;"></i>
                     </div>
+
+                    <p style="font-size:0.775rem;color:#4b5563;line-height:1.65;margin:1.25rem 0 0;">
+                        Complexe web-apps, API-koppelingen en grootschalige platforms. Volledig op maat.
+                    </p>
+
+                    <div class="feat-wrap" style="margin-top:1.25rem;">
+                        <div class="feat-label">Altijd inbegrepen</div>
+                        <div class="feat-row"><i data-lucide="shield-check"></i>24/7 Priority Support</div>
+                        <div class="feat-row"><i data-lucide="infinity"></i>Onbeperkte Revisies</div>
+                        <div class="feat-row"><i data-lucide="users"></i>Dedicated Project Lead</div>
+                        <div class="feat-row"><i data-lucide="lock"></i>NDA op aanvraag</div>
+                    </div>
+
+                    <div class="price-live">
+                        <span class="price-live-amount" style="font-size:1.375rem;">Custom</span>
+                    </div>
+
+                    <button class="select-btn" onclick="confirmPlan(event,'Custom',this)" tabindex="-1">
+                        Start Maatwerk
+                    </button>
                 </div>
+
+            </div><!-- /cards-wrapper -->
+
+            <!-- Trust -->
+            <div class="trust-row">
+                <span>Geen verborgen kosten</span>
+                <div class="trust-dot"></div>
+                <span>Betaling in fases</span>
+                <div class="trust-dot"></div>
+                <span>Jij blijft eigenaar</span>
             </div>
+
         </section>
 
-        <section id="briefing-step" class="hidden-section py-12 md:py-20 w-full max-w-4xl mx-auto">
-            <h2 class="text-3xl md:text-5xl font-black italic tracking-tighter text-silver mb-6 uppercase">Briefing</h2>
-            <div class="space-y-6">
-                <textarea id="project-desc" rows="6" class="w-full p-6 md:p-8 rounded-[1.5rem] md:rounded-[2rem] text-base md:text-xl" placeholder="Wat is je visie?"></textarea>
+        <!-- ════════════ STAP 2 — BRIEFING ════════════ -->
+        <section id="briefing-step" aria-hidden="true" class="py-20 max-w-3xl mx-auto">
+            <div class="mb-12">
+                <span id="summary-tag" class="bg-white/10 text-white px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4 inline-block">Plan: Professional</span>
+                <h2 class="text-silver text-5xl font-black italic tracking-tighter uppercase mt-4">Laatste Details</h2>
+            </div>
+
+            <div class="space-y-8">
+                <div>
+                    <label class="text-[10px] uppercase tracking-[0.3em] text-gray-500 mb-4 block">Jouw Projectomschrijving</label>
+                    <textarea id="project-desc" rows="6" class="w-full p-6 rounded-[1.75rem] text-base text-white" placeholder="Vertel ons over je doelen, doelgroep en specifieke wensen..."></textarea>
+                </div>
+
                 <div class="flex flex-col md:flex-row items-start md:items-center gap-4">
-                    <label class="cursor-pointer flex items-center gap-3 px-6 py-3 border border-gray-800 rounded-full w-full md:w-auto justify-center">
-                        <input type="file" id="file-input" multiple class="hidden" onchange="handleFiles(this.files)">
-                        <span class="text-[10px] uppercase tracking-widest font-bold">Bestanden</span>
+                    <label class="cursor-pointer flex items-center justify-center gap-3 px-6 py-4 border border-white/10 rounded-2xl hover:bg-white/5 transition min-h-[52px]" style="white-space:nowrap;">
+                        <input type="file" id="file-input" multiple style="display:none;" onchange="handleFiles(this.files)">
+                        <i data-lucide="paperclip" class="w-4 h-4"></i>
+                        <span class="text-xs font-bold uppercase tracking-widest">Bijlagen</span>
                     </label>
                     <div id="file-list" class="flex flex-wrap gap-2"></div>
                 </div>
-                <button onclick="finalSubmit()" class="btn-tap w-full md:w-auto px-12 py-5 bg-white text-black rounded-2xl font-black uppercase italic tracking-tighter">Verstuur →</button>
+
+                <button onclick="finalSubmit()" class="btn-main w-full py-5 rounded-[1.75rem] text-lg uppercase italic tracking-tighter">Verstuur Aanvraag</button>
             </div>
         </section>
+
     </main>
 
     <script>
         lucide.createIcons();
-        let mm = gsap.matchMedia();
 
-        // Stap Flow Functies (Blijven hetzelfde)
-        function startProjectFlow() {
-            const home = document.getElementById('home-wrapper');
-            const pricing = document.getElementById('pricing-step');
-            gsap.to(home, { opacity: 0, y: -20, duration: 0.5, onComplete: () => {
-                home.style.display = 'none';
-                pricing.style.display = 'block';
-                gsap.to(pricing, { opacity: 1, y: 0, duration: 0.8 });
-                window.scrollTo(0,0);
-            }});
-        }
+        // Cards entrance animation
+        gsap.fromTo('.price-card',
+            { opacity: 0, y: 28 },
+            { opacity: 1, y: 0, duration: 0.65, stagger: 0.11, ease: 'power3.out', delay: 0.1 }
+        );
 
-        function handleSelection(btn) {
-            const selectedCard = btn.closest('.price-card');
-            const allCards = document.querySelectorAll('.price-card');
-            const briefing = document.getElementById('briefing-step');
+        // Per-card price tracker
+        const priceState = new WeakMap();
 
-            allCards.forEach(card => { if (card !== selectedCard) gsap.to(card, { opacity: 0, scale: 0.9, duration: 0.3 }); });
-
-            // Op mobiel slaan we de gecentreerde animatie over voor snelheid, op desktop behouden we hem
-            mm.add("(min-width: 768px)", () => {
-                const rect = selectedCard.getBoundingClientRect();
-                const centerX = window.innerWidth / 2 - rect.left - rect.width / 2;
-                const centerY = window.innerHeight / 2 - rect.top - rect.height / 2;
-                gsap.to(selectedCard, { x: centerX, y: centerY, scale: 1.05, duration: 0.8, ease: "power4.inOut" });
+        function toggleSelection(card) {
+            document.querySelectorAll('.price-card').forEach(c => {
+                c.classList.remove('selected');
+                const b = c.querySelector('.select-btn');
+                b.classList.remove('visible');
+                b.setAttribute('tabindex', '-1');
             });
-
-            gsap.to(selectedCard, { opacity: 0, duration: 0.4, delay: 0.6, onComplete: () => {
-                document.getElementById('pricing-step').style.display = 'none';
-                briefing.style.display = 'block';
-                gsap.to(briefing, { opacity: 1, y: 0, duration: 0.8 });
-                window.scrollTo(0,0);
-            }});
+            card.classList.add('selected');
+            const btn = card.querySelector('.select-btn');
+            btn.classList.add('visible');
+            btn.setAttribute('tabindex', '0');
         }
 
-        // Responsive Interactivity Script
-        mm.add({
-            isDesktop: "(min-width: 768px)",
-            isMobile: "(max-width: 767px)"
-        }, (context) => {
-            let { isDesktop, isMobile } = context.conditions;
+        function toggleAddon(event, el, amount) {
+            event.stopPropagation();
+            const card = el.closest('.price-card');
+            const priceEl = card.querySelector('.price-live-amount');
+            const base = parseInt(priceEl.dataset.base);
+            if (!base) return;
 
-            if (isDesktop) {
-                // Magnetic Buttons Alleen op Desktop
-                document.querySelectorAll('.magnetic').forEach(m => {
-                    m.addEventListener('mousemove', e => {
-                        const r = m.getBoundingClientRect();
-                        gsap.to(m, { x: (e.clientX - (r.left + r.width/2)) * 0.3, y: (e.clientY - (r.top + r.height/2)) * 0.3, duration: 0.3 });
-                    });
-                    m.addEventListener('mouseleave', () => gsap.to(m, { x: 0, y: 0, duration: 0.3 }));
-                });
-            }
+            const isActive = el.classList.toggle('active');
+            if (!priceState.has(card)) priceState.set(card, base);
 
-            if (isMobile) {
-                // Simpele Tap Animatie voor Mobiel
-                document.querySelectorAll('.btn-tap').forEach(btn => {
-                    btn.addEventListener('touchstart', () => gsap.to(btn, { scale: 0.95, duration: 0.1 }));
-                    btn.addEventListener('touchend', () => gsap.to(btn, { scale: 1, duration: 0.1 }));
-                });
-            }
-        });
+            let current = priceState.get(card);
+            current += isActive ? amount : -amount;
+            priceState.set(card, current);
 
-        // File & Submit Handlers (Blijven hetzelfde)
+            const counter = { v: parseInt(priceEl.textContent.replace(/[^0-9]/g, '')) };
+            gsap.to(counter, {
+                v: current,
+                duration: 0.38,
+                ease: 'power2.out',
+                onUpdate() {
+                    priceEl.textContent = '€' + Math.round(counter.v).toLocaleString('nl-NL');
+                }
+            });
+        }
+
+        function confirmPlan(event, planName, btn) {
+            event.stopPropagation();
+            const card = btn.closest('.price-card');
+            const priceEl = card.querySelector('.price-live-amount');
+            const priceText = priceEl ? priceEl.textContent : '';
+
+            const pricing  = document.getElementById('pricing-step');
+            const briefing = document.getElementById('briefing-step');
+            document.getElementById('summary-tag').textContent = `${planName}  ·  ${priceText}`;
+
+            gsap.to(pricing, {
+                opacity: 0, y: -22, duration: 0.42, ease: 'power2.in',
+                onComplete() {
+                    pricing.style.visibility = 'hidden';
+                    pricing.style.position = 'absolute';
+                    pricing.style.pointerEvents = 'none';
+
+                    briefing.classList.add('active');
+                    briefing.setAttribute('aria-hidden', 'false');
+                    window.scrollTo({ top: 0, behavior: 'instant' });
+
+                    gsap.fromTo(briefing,
+                        { opacity: 0, y: 32 },
+                        { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }
+                    );
+                }
+            });
+        }
+
         function handleFiles(files) {
             const list = document.getElementById('file-list');
-            for (let file of files) {
+            for (const file of files) {
                 const chip = document.createElement('div');
-                chip.className = 'file-chip text-silver';
-                chip.innerHTML = `<span>${file.name.substring(0,10)}...</span>`;
+                chip.style.cssText = 'display:flex;align-items:center;gap:0.35rem;background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.08);padding:0.3rem 0.7rem;border-radius:999px;font-size:0.575rem;color:#c9d6e8;max-width:150px;';
+                chip.innerHTML = `<span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${file.name}</span>`;
                 list.appendChild(chip);
+                gsap.fromTo(chip, { opacity: 0, scale: 0.82 }, { opacity: 1, scale: 1, duration: 0.28, ease: 'back.out(1.5)' });
             }
+            document.getElementById('file-input').value = '';
         }
 
         function finalSubmit() {
-            gsap.to('main', { opacity: 0, duration: 0.5, onComplete: () => {
-                alert("Verzonden!");
-                location.reload();
-            }});
+            const desc = document.getElementById('project-desc').value.trim();
+            if (!desc) {
+                const ta = document.getElementById('project-desc');
+                gsap.fromTo(ta, { x: -7 }, { x: 0, duration: 0.38, ease: 'elastic.out(1,0.35)' });
+                ta.focus();
+                return;
+            }
+
+            const briefing = document.getElementById('briefing-step');
+            gsap.to(briefing, {
+                opacity: 0, scale: 0.96, duration: 0.45, ease: 'power2.in',
+                onComplete() {
+                    document.querySelector('main').innerHTML = `
+                        <div style="min-height:80dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:3rem 1.5rem;">
+                            <div style="font-size:2.5rem;opacity:0.08;margin-bottom:2rem;letter-spacing:0.1em;">✦</div>
+                            <h1 style="font-size:clamp(3rem,12vw,6rem);font-weight:900;font-style:italic;letter-spacing:-0.04em;line-height:0.9;background:linear-gradient(135deg,#f5f7fa,#b8c6db,#f5f7fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:1.5rem;">On the<br>Radar.</h1>
+                            <p style="color:#6b7280;max-width:20rem;line-height:1.75;font-size:0.875rem;">We hebben je briefing ontvangen. Onze experts duiken in je visie. Je hoort binnen 24 uur van ons.</p>
+                            <button onclick="location.reload()" style="margin-top:3rem;font-size:0.525rem;font-weight:800;letter-spacing:0.35em;text-transform:uppercase;background:none;border:none;border-bottom:1px solid rgba(255,255,255,0.12);color:#fff;cursor:pointer;padding-bottom:0.3rem;opacity:0.4;transition:opacity 0.2s;min-height:44px;display:flex;align-items:flex-end;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.4">Terug naar home</button>
+                        </div>
+                    `;
+                    gsap.fromTo('main', { opacity: 0, scale: 0.97 }, { opacity: 1, scale: 1, duration: 0.65, ease: 'power3.out' });
+                }
+            });
         }
     </script>
 </body>
