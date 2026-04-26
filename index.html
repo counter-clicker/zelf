@@ -7,7 +7,6 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- EmailJS -->
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,700;0,900;1,900&display=swap" rel="stylesheet">
 
@@ -262,35 +261,31 @@
 </head>
 <body>
 
-<!-- ════ TOAST ════ -->
 <div id="toast">
     <svg id="toast-icon"></svg>
     <span id="toast-msg"></span>
 </div>
 
-<!-- ════ NAV ════ -->
 <nav id="site-nav">
     <span class="nav-logo s" onclick="goHome()">ZELF.</span>
     <div class="nav-links">
-        <a href="#werk"    class="nav-link">Werk</a>
-        <a href="#pricing" class="nav-link">Prijzen</a>
+        <a href="#" onclick="scrollToSection('werk'); return false;" class="nav-link">Werk</a>
+        <a href="#" onclick="startFlow(); return false;" class="nav-link">Prijzen</a>
         <button class="nav-cta" onclick="startFlow()">Start Project</button>
     </div>
 </nav>
 
-<!-- ════ HERO ════ -->
 <section id="hero">
     <div class="hero-eyebrow" id="he">Webdesign Studio — Antwerpen</div>
     <h1 class="hero-wordmark" id="hw">ZELF<span style="background:linear-gradient(135deg,#b8c6db,#f5f7fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">.</span></h1>
     <p class="hero-sub" id="hs">Jouw visie, vertaald in een digitale ervaring.<br>Wij bouwen de toekomst van het web.</p>
     <div class="hero-btns" id="hb">
         <button class="btn-primary" onclick="startFlow()">Start jouw project</button>
-        <button class="btn-ghost" onclick="document.getElementById('werk').scrollIntoView({behavior:'smooth',block:'start'})">Bekijk portfolio</button>
+        <button class="btn-ghost" onclick="scrollToSection('werk')">Bekijk portfolio</button>
     </div>
     <div class="scroll-hint" id="sh"><span>Scroll</span><i data-lucide="chevron-down"></i></div>
 </section>
 
-<!-- ════ WERK ════ -->
 <section id="werk">
     <div class="section-label">Geselecteerd werk</div>
     <div class="work-grid">
@@ -303,7 +298,6 @@
     </div>
 </section>
 
-<!-- ════ WHY ════ -->
 <section id="why">
     <p class="section-label">Waarom ZELF.</p>
     <h2 class="why-heading">Niet zomaar<br>een website.</h2>
@@ -315,7 +309,6 @@
     </div>
 </section>
 
-<!-- ════ PRICING ════ -->
 <section id="pricing">
     <section id="pricing-step">
         <div class="pricing-header">
@@ -325,7 +318,6 @@
         </div>
         <div class="s-rule"></div>
 
-        <!-- Desktop -->
         <div class="cards-desktop">
             <div class="price-card" onclick="toggleSelection(this)">
                 <div class="card-num">01 — Basic</div>
@@ -363,7 +355,6 @@
             </div>
         </div>
 
-        <!-- Mobile carousel -->
         <div class="cards-mobile">
             <div class="swipe-track" id="swipeTrack">
 
@@ -423,7 +414,6 @@
         </div>
     </section>
 
-    <!-- BRIEFING -->
     <section id="briefing-step" aria-hidden="true">
         <span class="brief-tag" id="summary-tag">Plan: Pro</span>
         <h2 class="brief-title">Laatste<br>Details.</h2>
@@ -459,7 +449,6 @@
     </section>
 </section>
 
-<!-- ════ FOOTER ════ -->
 <footer id="site-footer">
     <div class="footer-logo">ZELF.</div>
     <div class="footer-sub">Webdesign Studio — Antwerpen · 2025</div>
@@ -506,9 +495,87 @@ if (track) {
     }, { passive: true });
 }
 
-// Nav helpers
-function goHome() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
-function startFlow() { document.getElementById('pricing').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+// ════ NIEUWE NAVIGATIE / PAGINA TRANSITIE LOGICA ════
+const homeSections = ['hero', 'werk', 'why'];
+
+function goHome() {
+    const heroEl = document.getElementById('hero');
+    if (heroEl.style.display === 'none') {
+        // Als we in de "Prijzen" flow zitten, ga dan terug naar home met een fade
+        const pricingStep = document.getElementById('pricing-step');
+        const briefingStep = document.getElementById('briefing-step');
+
+        gsap.to([pricingStep, briefingStep], {
+            opacity: 0, duration: 0.3,
+            onComplete: () => {
+                homeSections.forEach(id => {
+                    const el = document.getElementById(id);
+                    if(el) { el.style.display = ''; el.style.opacity = '0'; }
+                });
+                document.getElementById('pricing').style.display = '';
+                pricingStep.style.opacity = '1'; // Reset voor later
+                window.scrollTo({ top: 0, behavior: 'instant' });
+                gsap.to(homeSections.map(id => document.getElementById(id)), { opacity: 1, duration: 0.5 });
+            }
+        });
+    } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+}
+
+function scrollToSection(id) {
+    const heroEl = document.getElementById('hero');
+    if (heroEl.style.display === 'none') {
+        // Herstel alle secties direct mochten we in het prijzen menu zitten
+        homeSections.forEach(secId => {
+            const el = document.getElementById(secId);
+            if(el) { el.style.display = ''; el.style.opacity = '1'; }
+        });
+        document.getElementById('pricing').style.display = '';
+        document.getElementById('pricing-step').style.opacity = '1';
+    }
+    // Wacht even een mini seconde zodat de DOM updatet, daarna scrollen
+    setTimeout(() => {
+        document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 10);
+}
+
+function startFlow() {
+    const elsToHide = homeSections.map(id => document.getElementById(id));
+    const pricingContainer = document.getElementById('pricing');
+    const pricingStep = document.getElementById('pricing-step');
+
+    // Fade out home pagina secties
+    gsap.to(elsToHide, {
+        opacity: 0, y: -20, duration: 0.4, ease: 'power2.inOut',
+        onComplete: () => {
+            // Verberg ze zodat de layout shift naar boven
+            elsToHide.forEach(el => el.style.display = 'none');
+            
+            // Spring naar boven
+            window.scrollTo({ top: 0, behavior: 'instant' });
+
+            // Zorg dat Prijzen goed staat
+            pricingContainer.style.display = 'block';
+            pricingStep.style.opacity = '1';
+
+            // Fade de kaarten opnieuw in voor de app feel
+            gsap.fromTo('.pricing-header',
+                { opacity: 0, y: 20 },
+                { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }
+            );
+            gsap.fromTo('.cards-desktop .price-card',
+                { opacity: 0, y: 24 },
+                { opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: 'power3.out', delay: 0.1 }
+            );
+            gsap.fromTo('.cards-mobile',
+                { opacity: 0, y: 24 },
+                { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', delay: 0.1 }
+            );
+        }
+    });
+}
+// ════ EINDE NIEUWE LOGICA ════
 
 // Price state
 const priceState = new WeakMap();
@@ -680,4 +747,3 @@ async function finalSubmit() {
 </script>
 </body>
 </html>
-
