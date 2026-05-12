@@ -35,16 +35,11 @@
         -webkit-font-smoothing: antialiased;
     }
 
-    .s {
-        background: var(--silver-2);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
+    .s { background: var(--silver-2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 
     /* NAV */
     #site-nav {
-        position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+        position: fixed; top: 0; left: 0; right: 0; z-index: 500;
         display: flex; justify-content: space-between; align-items: center;
         padding: 1.1rem 1.5rem;
         backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
@@ -53,697 +48,273 @@
     }
     .nav-logo { font-size: 1.25rem; font-weight: 900; font-style: italic; letter-spacing: -0.03em; text-decoration: none; cursor: pointer; }
     .nav-links { display: flex; align-items: center; gap: 1.5rem; }
-    .nav-link { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: #6b7280; text-decoration: none; transition: color 0.2s; min-height: 44px; display: flex; align-items: center; }
+    .nav-link { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: #6b7280; text-decoration: none; transition: color 0.2s; cursor: pointer; }
     .nav-link:hover { color: #fff; }
-    .nav-cta { font-size: 0.575rem; font-weight: 900; letter-spacing: 0.18em; text-transform: uppercase; background: #fff; color: #000; border: none; padding: 0.55rem 1.1rem; border-radius: 999px; cursor: pointer; transition: opacity 0.2s, transform 0.2s; min-height: 36px; white-space: nowrap; }
-    .nav-cta:hover { opacity: 0.88; transform: translateY(-1px); }
+    .nav-cta { font-size: 0.575rem; font-weight: 900; letter-spacing: 0.18em; text-transform: uppercase; background: #fff; color: #000; border: none; padding: 0.55rem 1.1rem; border-radius: 999px; cursor: pointer; transition: all 0.3s cubic-bezier(0.16,1,0.3,1); }
+    .nav-cta:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(255,255,255,0.2); }
+
+    /* PAGE VIEWS */
+    .view { width: 100%; min-height: 100dvh; position: absolute; top: 0; left: 0; padding-top: 80px; visibility: hidden; opacity: 0; }
+    .view.active { visibility: visible; opacity: 1; position: relative; }
 
     /* HERO */
     #hero {
-        min-height: 100dvh; display: flex; flex-direction: column;
+        min-height: 80dvh; display: flex; flex-direction: column;
         justify-content: center; align-items: center; text-align: center;
-        padding: 6rem 1.5rem 3rem; position: relative; overflow: hidden;
+        padding: 0 1.5rem; position: relative;
     }
-    #hero::before {
-        content: ''; position: absolute; top: 30%; left: 50%; transform: translate(-50%,-50%);
-        width: min(600px,120vw); height: min(600px,120vw);
-        background: radial-gradient(circle, rgba(184,198,219,0.055) 0%, transparent 65%);
-        pointer-events: none;
-    }
-    #hero::after {
-        content: ''; position: absolute; inset: 0;
-        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
-        pointer-events: none;
-    }
-    .hero-eyebrow { font-size: 0.55rem; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; color: #4b5563; margin-bottom: 2rem; display: flex; align-items: center; gap: 0.75rem; opacity: 0; }
-    .hero-eyebrow::before, .hero-eyebrow::after { content: ''; width: 2rem; height: 1px; }
-    .hero-eyebrow::before { background: linear-gradient(90deg, transparent, #4b5563); }
-    .hero-eyebrow::after  { background: linear-gradient(90deg, #4b5563, transparent); }
+    .hero-eyebrow { font-size: 0.55rem; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; color: #4b5563; margin-bottom: 2rem; display: flex; align-items: center; gap: 0.75rem; }
+    .hero-eyebrow::before, .hero-eyebrow::after { content: ''; width: 2rem; height: 1px; background: #4b5563; }
     .hero-wordmark {
         font-size: clamp(5rem, 22vw, 11rem); font-weight: 900; font-style: italic;
-        letter-spacing: -0.045em; line-height: 0.88; margin-bottom: 0.15em; opacity: 0;
-        background: linear-gradient(160deg, #e8ecf0 0%, #c5d0de 18%, #8fa4bb 32%, #d8e2ec 45%, #f0f3f6 55%, #b0c0d0 70%, #dce5ee 85%, #f5f7fa 100%);
-        -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-        position: relative; z-index: 1;
+        letter-spacing: -0.045em; line-height: 0.88; margin-bottom: 0.15em;
+        background: linear-gradient(160deg, #e8ecf0 0%, #8fa4bb 50%, #f5f7fa 100%);
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
-    .hero-sub { font-size: clamp(0.8125rem,2.5vw,1rem); color: #6b7280; max-width: 22rem; line-height: 1.7; margin-bottom: 2.5rem; opacity: 0; }
-    .hero-btns { display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; opacity: 0; }
+    .hero-sub { font-size: clamp(0.8125rem,2.5vw,1rem); color: #6b7280; max-width: 22rem; line-height: 1.7; margin-bottom: 2.5rem; }
+    .hero-btns { display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; }
 
     .btn-primary {
         font-size: 0.625rem; font-weight: 900; letter-spacing: 0.16em; text-transform: uppercase;
         background: #fff; color: #000; border: none; padding: 0.9rem 1.75rem; border-radius: 999px;
-        cursor: pointer; position: relative; overflow: hidden; transition: transform 0.25s, box-shadow 0.25s;
-        min-height: 48px; -webkit-tap-highlight-color: transparent;
+        cursor: pointer; transition: all 0.3s;
     }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(255,255,255,0.22); }
-    .btn-primary:active { transform: scale(0.97); }
     .btn-ghost {
         font-size: 0.625rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
         background: transparent; color: #9ca3af; border: 1px solid rgba(255,255,255,0.12);
-        padding: 0.9rem 1.75rem; border-radius: 999px; cursor: pointer; transition: all 0.25s; min-height: 48px;
+        padding: 0.9rem 1.75rem; border-radius: 999px; cursor: pointer; transition: all 0.25s;
     }
-    .btn-ghost:hover { border-color: rgba(255,255,255,0.3); color: #fff; }
+    .btn-ghost:hover { border-color: #fff; color: #fff; }
 
-    .scroll-hint { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 0.4rem; opacity: 0; animation: bobble 2.5s ease-in-out infinite; }
-    .scroll-hint span { font-size: 0.48rem; letter-spacing: 0.25em; text-transform: uppercase; color: #374151; }
-    .scroll-hint svg { color: #374151; width: 0.9rem; height: 0.9rem; }
-    @keyframes bobble { 0%,100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(5px); } }
-
-    /* WERK */
-    #werk { padding: 5rem 1.5rem; max-width: 80rem; margin: 0 auto; }
-    .section-label { font-size: 0.55rem; font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase; color: #374151; margin-bottom: 3rem; display: flex; align-items: center; gap: 0.75rem; }
-    .section-label::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(255,255,255,0.06), transparent); }
-    .work-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.875rem; }
-    @media (min-width: 640px) { .work-grid { grid-template-columns: repeat(3, 1fr); } }
-    .work-card { aspect-ratio: 4/5; border-radius: 1.25rem; border: 1px solid rgba(255,255,255,0.06); position: relative; overflow: hidden; cursor: pointer; transition: transform 0.35s cubic-bezier(0.16,1,0.3,1), border-color 0.3s; }
-    .work-card:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.14); }
-    .work-card:active { transform: scale(0.97); }
-    .work-card-inner { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; padding: 1.25rem; background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 60%); }
-    .work-card:nth-child(1) { background: linear-gradient(135deg, #0d0d0f, #1a1a22); }
-    .work-card:nth-child(2) { background: linear-gradient(135deg, #0a0e0d, #0f1a18); }
-    .work-card:nth-child(3) { background: linear-gradient(135deg, #0d0a10, #150f1a); }
-    .work-card:nth-child(4) { background: linear-gradient(135deg, #100d08, #1a1508); }
-    .work-card:nth-child(5) { background: linear-gradient(135deg, #080d10, #0a1520); }
-    .work-card:nth-child(6) { background: linear-gradient(135deg, #0d0d0d, #1a1a1a); }
-    .work-tag { font-size: 0.48rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #6b7280; margin-bottom: 0.3rem; }
-    .work-name { font-size: 1rem; font-weight: 900; font-style: italic; letter-spacing: -0.02em; }
-
-    /* WHY */
+    /* WHY SECTION */
     #why { padding: 5rem 1.5rem; max-width: 80rem; margin: 0 auto; }
-    .why-heading { font-size: clamp(2rem,8vw,4rem); font-weight: 900; font-style: italic; letter-spacing: -0.04em; line-height: 0.92; text-transform: uppercase; margin-bottom: 3rem; background: var(--silver-2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-    .why-grid { display: grid; grid-template-columns: 1fr; gap: 1px; border: 1px solid rgba(255,255,255,0.06); border-radius: 1.5rem; overflow: hidden; }
-    @media (min-width: 640px) { .why-grid { grid-template-columns: 1fr 1fr; } }
-    .why-item { padding: 1.75rem; background: rgba(255,255,255,0.018); border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.3s; }
-    .why-item:last-child { border-bottom: none; }
-    @media (min-width: 640px) { .why-item:nth-last-child(-n+2) { border-bottom: none; } }
-    .why-item:hover { background: rgba(255,255,255,0.03); }
-    .why-icon { margin-bottom: 1rem; color: #4b5563; } .why-icon svg { width: 1.25rem; height: 1.25rem; }
-    .why-title { font-size: 0.875rem; font-weight: 700; margin-bottom: 0.5rem; color: #e5e7eb; }
+    .why-heading { font-size: clamp(2rem,8vw,4rem); font-weight: 900; font-style: italic; letter-spacing: -0.04em; line-height: 0.92; text-transform: uppercase; margin-bottom: 3rem; }
+    .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1px; border: 1px solid rgba(255,255,255,0.06); border-radius: 1.5rem; overflow: hidden; }
+    .why-item { padding: 2rem; background: rgba(255,255,255,0.01); border: 0.5px solid rgba(255,255,255,0.05); }
+    .why-icon { margin-bottom: 1rem; color: #4b5563; }
+    .why-title { font-size: 0.875rem; font-weight: 700; margin-bottom: 0.5rem; }
     .why-desc { font-size: 0.775rem; color: #6b7280; line-height: 1.65; }
 
-    /* PRICING */
-    #pricing { padding: 5rem 0 6rem; position: relative; }
-    #pricing-step { will-change: opacity, transform; }
-    .pricing-header { text-align: center; padding: 0 1.5rem; margin-bottom: 3rem; }
-    .section-eyebrow-c { display: inline-flex; align-items: center; gap: 0.6rem; font-size: 0.55rem; font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase; color: #4b5563; margin-bottom: 1.25rem; }
-    .section-eyebrow-c::before, .section-eyebrow-c::after { content: ''; width: 1.25rem; height: 1px; }
-    .section-eyebrow-c::before { background: linear-gradient(90deg, transparent, #4b5563); }
-    .section-eyebrow-c::after  { background: linear-gradient(90deg, #4b5563, transparent); }
-    .pricing-heading { font-size: clamp(2.5rem,10vw,5rem); font-weight: 900; font-style: italic; letter-spacing: -0.04em; line-height: 0.9; text-transform: uppercase; margin-bottom: 1rem; background: var(--silver-2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-    .pricing-sub { font-size: 0.8125rem; color: #6b7280; max-width: 22rem; margin: 0 auto; line-height: 1.65; }
-    .s-rule { height: 1px; background: linear-gradient(90deg, transparent, #b8c6db 40%, #e8edf5 60%, transparent); opacity: 0.25; margin: 2rem 1.5rem; }
+    /* PORTFOLIO VIEW */
+    #portfolio-view { background: #0a0a0b; z-index: 600; padding: 100px 1.5rem 5rem; }
+    .portfolio-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 4rem; max-width: 80rem; margin-inline: auto; }
+    .work-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; max-width: 80rem; margin: 0 auto; }
+    .work-card { aspect-ratio: 16/10; border-radius: 1.5rem; border: 1px solid rgba(255,255,255,0.06); position: relative; overflow: hidden; background: #111; cursor: pointer; transition: transform 0.4s; }
+    .work-card:hover { transform: scale(0.98); }
+    .work-card-inner { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; padding: 2rem; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); }
+    .work-tag { font-size: 0.5rem; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: #4b5563; }
+    .work-name { font-size: 1.5rem; font-weight: 900; font-style: italic; }
 
-    /* Desktop cards */
-    .cards-desktop { display: none; grid-template-columns: repeat(3,1fr); gap: 1.125rem; max-width: 80rem; margin: 0 auto; padding: 0 1.5rem; align-items: start; }
-    @media (min-width: 768px) { .cards-desktop { display: grid; } }
-
-    /* Mobile carousel */
-    .cards-mobile { display: block; }
-    @media (min-width: 768px) { .cards-mobile { display: none; } }
-    .swipe-track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; gap: 1rem; padding: 0.5rem 1.5rem 1.5rem; }
-    .swipe-track::-webkit-scrollbar { display: none; }
-    .swipe-slide { flex: 0 0 calc(100vw - 3rem); max-width: 380px; scroll-snap-align: center; scroll-snap-stop: always; }
-    .swipe-dots { display: flex; justify-content: center; gap: 0.4rem; margin-top: 1.25rem; padding-bottom: 0.5rem; }
-    .swipe-dot { width: 0.35rem; height: 0.35rem; border-radius: 999px; background: #374151; transition: all 0.3s cubic-bezier(0.16,1,0.3,1); }
-    .swipe-dot.active { background: #b8c6db; width: 1.25rem; }
-
-    /* Card shared */
-    .price-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 1.625rem; padding: 1.625rem; display: flex; flex-direction: column; position: relative; cursor: pointer; will-change: transform, border-color, box-shadow; transition: border-color 0.35s cubic-bezier(0.16,1,0.3,1), box-shadow 0.35s cubic-bezier(0.16,1,0.3,1), background 0.35s, transform 0.4s cubic-bezier(0.175,0.885,0.32,1.275); -webkit-tap-highlight-color: transparent; user-select: none; overflow: hidden; }
-    .price-card::before { content: ''; position: absolute; top: 0; left: 15%; right: 15%; height: 1px; background: linear-gradient(90deg, transparent, rgba(184,198,219,0.12), transparent); }
-    @media (hover: hover) { .price-card:hover { border-color: rgba(255,255,255,0.16); box-shadow: 0 8px 40px -12px var(--silver-glow); } }
-    .price-card:active { transform: scale(0.984); }
-    .price-card.selected { border-color: rgba(255,255,255,0.32); background: rgba(255,255,255,0.038); box-shadow: 0 0 0 1px rgba(255,255,255,0.07), 0 20px 60px -20px var(--silver-strong), inset 0 1px 0 rgba(255,255,255,0.06); }
-    .price-card.selected::before { background: linear-gradient(90deg, transparent, rgba(184,198,219,0.42), transparent); }
-    @media (min-width: 768px) { .price-card.selected { transform: translateY(-8px); } }
-    .card-pro-default { border-color: rgba(255,255,255,0.11); }
-    .pill-badge { position: absolute; top: -0.7rem; left: 50%; transform: translateX(-50%); background: #fff; color: #000; padding: 0.18rem 0.9rem; border-radius: 999px; font-size: 0.48rem; font-weight: 900; letter-spacing: 0.2em; text-transform: uppercase; white-space: nowrap; box-shadow: 0 2px 12px rgba(255,255,255,0.15); }
-    .card-num { font-size: 0.48rem; font-weight: 700; letter-spacing: 0.28em; color: rgba(255,255,255,0.12); text-transform: uppercase; margin-bottom: 1rem; }
-    .card-title-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.3rem; }
-    .card-title { font-size: 1.625rem; font-weight: 900; font-style: italic; letter-spacing: -0.025em; line-height: 1; }
-    .card-start { font-size: 0.5rem; font-weight: 700; letter-spacing: 0.18em; color: #4b5563; text-transform: uppercase; margin-top: 0.35rem; }
-    .feat-wrap { margin: 1.25rem 0; flex: 1; }
-    .feat-lbl { font-size: 0.46rem; font-weight: 700; letter-spacing: 0.25em; color: #374151; text-transform: uppercase; margin-bottom: 0.55rem; }
-    .feat-row { display: flex; align-items: center; gap: 0.55rem; padding: 0.28rem 0; font-size: 0.775rem; color: #6b7280; border-bottom: 1px solid rgba(255,255,255,0.025); }
-    .feat-row:last-child { border-bottom: none; }
-    .feat-row svg { width: 0.65rem; height: 0.65rem; flex-shrink: 0; color: #374151; }
-    .price-card.selected .feat-row { color: #9ca3af; }
-    .addons-wrap { border-top: 1px solid rgba(255,255,255,0.04); padding-top: 1rem; }
-    .addon-row { display: flex; align-items: center; justify-content: space-between; padding: 0.45rem 0; cursor: pointer; min-height: 38px; -webkit-tap-highlight-color: transparent; }
-    .addon-left { display: flex; align-items: center; gap: 0.55rem; }
-    .addon-check { width: 0.875rem; height: 0.875rem; border: 1px solid rgba(255,255,255,0.12); border-radius: 3px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.22s; }
-    .addon-check svg { width: 0.48rem; height: 0.48rem; opacity: 0; transition: opacity 0.18s; }
-    .addon-row.active .addon-check { background: #fff; border-color: #fff; color: #000; }
-    .addon-row.active .addon-check svg { opacity: 1; }
-    .addon-nm { font-size: 0.725rem; color: #6b7280; }
-    .addon-pr { font-size: 0.5rem; color: #374151; letter-spacing: 0.07em; }
-    .price-live { margin-top: 1.25rem; display: flex; align-items: baseline; gap: 0.25rem; }
-    .price-amt { font-size: 2rem; font-weight: 900; font-style: italic; letter-spacing: -0.03em; background: var(--silver-2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-    .price-sfx { font-size: 0.52rem; color: #374151; text-transform: uppercase; letter-spacing: 0.14em; }
-    .select-btn { margin-top: 1.25rem; width: 100%; padding: 0.85rem; background: #fff; color: #000; font-weight: 900; font-size: 0.575rem; letter-spacing: 0.18em; text-transform: uppercase; border: none; border-radius: 0.75rem; cursor: pointer; position: relative; overflow: hidden; opacity: 0; transform: translateY(8px); transition: opacity 0.38s cubic-bezier(0.16,1,0.3,1), transform 0.38s cubic-bezier(0.16,1,0.3,1), box-shadow 0.22s; will-change: opacity, transform; min-height: 48px; -webkit-tap-highlight-color: transparent; }
-    .select-btn.visible { opacity: 1 !important; transform: translateY(0) !important; }
-    @media (max-width: 767px) { .price-card .select-btn { opacity: 1 !important; transform: translateY(0) !important; } }
-    @media (hover: hover) { .select-btn:hover { box-shadow: 0 4px 20px rgba(255,255,255,0.2); transform: translateY(-2px) !important; } }
-    .select-btn:active { transform: scale(0.97) !important; }
-    .trust-row { display: flex; align-items: center; justify-content: center; gap: 1.1rem; margin-top: 2.5rem; opacity: 0.25; padding: 0 1.5rem; flex-wrap: wrap; }
-    .trust-row span { font-size: 0.5rem; letter-spacing: 0.18em; text-transform: uppercase; }
-    .trust-dot { width: 2px; height: 2px; background: #6b7280; border-radius: 50%; flex-shrink: 0; }
+    /* PRICING / PROJECT VIEW */
+    #project-view { padding: 100px 1.5rem 5rem; }
+    .pricing-header { text-align: center; margin-bottom: 4rem; }
+    .cards-desktop { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; max-width: 80rem; margin: 0 auto; }
+    .price-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 1.625rem; padding: 2rem; position: relative; transition: all 0.3s; cursor: pointer; }
+    .price-card.selected { border-color: #fff; background: rgba(255,255,255,0.05); }
+    .card-title { font-size: 1.8rem; font-weight: 900; font-style: italic; margin-bottom: 0.5rem; }
+    .feat-row { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: #6b7280; margin-bottom: 0.5rem; }
+    .addon-row { display: flex; justify-content: space-between; padding: 0.8rem; background: rgba(255,255,255,0.03); border-radius: 0.8rem; margin-top: 0.5rem; font-size: 0.75rem; cursor: pointer; }
+    .addon-row.active { background: #fff; color: #000; }
+    .price-amt { font-size: 1.8rem; font-weight: 900; margin-top: 2rem; display: block; }
+    .select-btn { width: 100%; padding: 1rem; margin-top: 1.5rem; border-radius: 1rem; border: none; background: #fff; font-weight: 900; cursor: pointer; text-transform: uppercase; letter-spacing: 0.1em; }
 
     /* BRIEFING */
-    #briefing-step { display: block; visibility: hidden; opacity: 0; position: absolute; pointer-events: none; top: 0; left: 0; right: 0; will-change: opacity, transform; padding: 5rem 1.5rem 6rem; max-width: 48rem; margin: 0 auto; }
-    #briefing-step.active { position: relative; visibility: visible; pointer-events: auto; }
-    .brief-tag { display: inline-block; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); padding: 0.25rem 0.875rem; border-radius: 999px; font-size: 0.5rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 1.25rem; }
-    .brief-title { font-size: clamp(2.25rem,8vw,3.75rem); font-weight: 900; font-style: italic; letter-spacing: -0.04em; line-height: 0.9; text-transform: uppercase; margin-bottom: 3rem; background: var(--silver-2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-    .field-lbl { display: block; font-size: 0.5rem; font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase; color: #4b5563; margin-bottom: 0.75rem; }
-    textarea { width: 100%; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.07); border-radius: 1.5rem; padding: 1.25rem 1.5rem; font-family: 'Inter', sans-serif; font-size: 1rem; color: #f0f0f0; resize: none; outline: none; transition: border-color 0.3s, box-shadow 0.3s; }
-    textarea::placeholder { color: #2d2d35; }
-    textarea:focus { border-color: rgba(255,255,255,0.22); box-shadow: 0 0 24px rgba(255,255,255,0.03); }
-    .upload-row { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
-    .upload-btn { display: flex; align-items: center; gap: 0.6rem; padding: 0.8rem 1.25rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 0.875rem; background: transparent; color: #9ca3af; font-family: 'Inter', sans-serif; font-size: 0.575rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; cursor: pointer; transition: all 0.22s; min-height: 48px; white-space: nowrap; -webkit-tap-highlight-color: transparent; }
-    .upload-btn:hover { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.2); color: #fff; }
-    .upload-btn svg { width: 0.9rem; height: 0.9rem; }
-    .file-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-    .file-chip { display: flex; align-items: center; gap: 0.3rem; background: rgba(255,255,255,0.035); border: 1px solid rgba(255,255,255,0.08); padding: 0.28rem 0.65rem; border-radius: 999px; font-size: 0.56rem; color: #c9d6e8; max-width: 140px; }
-    .file-chip span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    #briefing-step { max-width: 500px; margin: 4rem auto; display: none; }
+    textarea { width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); border-radius: 1.2rem; padding: 1.2rem; color: #fff; font-family: inherit; margin-bottom: 1rem; outline: none; }
+    .btn-submit { width: 100%; padding: 1.2rem; background: #fff; color: #000; font-weight: 900; border-radius: 1.2rem; border: none; cursor: pointer; text-transform: uppercase; }
 
-    /* Submit button */
-    .btn-submit { width: 100%; padding: 1.25rem; background: #fff; color: #000; font-weight: 900; font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase; border: none; border-radius: 1.5rem; cursor: pointer; position: relative; overflow: hidden; transition: transform 0.25s, box-shadow 0.25s, background 0.2s; min-height: 60px; -webkit-tap-highlight-color: transparent; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
-    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(255,255,255,0.25); }
-    .btn-submit:active { transform: scale(0.98); }
-    .btn-submit:disabled { background: #1a1a1a; color: #4b5563; cursor: not-allowed; transform: none; box-shadow: none; }
-    .btn-submit .spinner { width: 1rem; height: 1rem; border: 2px solid rgba(0,0,0,0.2); border-top-color: #000; border-radius: 50%; animation: spin 0.6s linear infinite; display: none; }
-    .btn-submit.loading .spinner { display: block; }
-    .btn-submit.loading .btn-label { opacity: 0.5; }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    /* TOAST */
+    #toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); padding: 1rem 2rem; background: #111; border: 1px solid #333; border-radius: 999px; z-index: 1000; display: none; font-weight: 700; font-size: 0.8rem; }
 
-    /* Toast notification */
-    #toast {
-        position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(20px);
-        background: rgba(20,20,22,0.95); border: 1px solid rgba(255,255,255,0.1);
-        backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-        padding: 0.875rem 1.5rem; border-radius: 999px;
-        font-size: 0.6rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
-        white-space: nowrap; z-index: 500; opacity: 0; pointer-events: none;
-        transition: opacity 0.3s, transform 0.3s;
-        display: flex; align-items: center; gap: 0.6rem;
-    }
-    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-    #toast.success { border-color: rgba(134,239,172,0.3); color: #86efac; }
-    #toast.error   { border-color: rgba(252,165,165,0.3); color: #fca5a5; }
-    #toast svg { width: 0.875rem; height: 0.875rem; flex-shrink: 0; }
-
-    /* FOOTER */
-    footer { border-top: 1px solid rgba(255,255,255,0.05); padding: 2.5rem 1.5rem; display: flex; flex-direction: column; align-items: center; gap: 1rem; text-align: center; }
-    .footer-logo { font-size: 1rem; font-weight: 900; font-style: italic; letter-spacing: -0.03em; background: var(--silver-2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-    .footer-sub { font-size: 0.55rem; color: #374151; letter-spacing: 0.2em; text-transform: uppercase; }
-
-    .space-y > * + * { margin-top: 1.75rem; }
+    footer { padding: 4rem 1.5rem; border-top: 1px solid rgba(255,255,255,0.05); text-align: center; }
     </style>
 </head>
 <body>
 
-<div id="toast">
-    <svg id="toast-icon"></svg>
-    <span id="toast-msg"></span>
-</div>
+<div id="toast"></div>
 
 <nav id="site-nav">
-    <span class="nav-logo s" onclick="goHome()">ZELF.</span>
+    <span class="nav-logo s" onclick="changeView('home')">ZELF.</span>
     <div class="nav-links">
-        <a href="#" onclick="scrollToSection('werk'); return false;" class="nav-link">Werk</a>
-        <a href="#" onclick="startFlow(); return false;" class="nav-link">Prijzen</a>
-        <button class="nav-cta" onclick="startFlow()">Start Project</button>
+        <a class="nav-link" onclick="changeView('portfolio')">Portfolio</a>
+        <button class="nav-cta" onclick="changeView('project')">Start Project</button>
     </div>
 </nav>
 
-<section id="hero">
-    <div class="hero-eyebrow" id="he">Webdesign Studio — Antwerpen</div>
-    <h1 class="hero-wordmark" id="hw">ZELF<span style="background:linear-gradient(135deg,#b8c6db,#f5f7fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">.</span></h1>
-    <p class="hero-sub" id="hs">Jouw visie, vertaald in een digitale ervaring.<br>Wij bouwen de toekomst van het web.</p>
-    <div class="hero-btns" id="hb">
-        <button class="btn-primary" onclick="startFlow()">Start jouw project</button>
-        <button class="btn-ghost" onclick="scrollToSection('werk')">Bekijk portfolio</button>
-    </div>
-    <div class="scroll-hint" id="sh"><span>Scroll</span><i data-lucide="chevron-down"></i></div>
-</section>
+<div id="home-view" class="view active">
+    <section id="hero">
+        <div class="hero-eyebrow">Webdesign Studio — Antwerpen</div>
+        <h1 class="hero-wordmark">BOUW<br><span class="s">DIGITAAL.</span></h1>
+        <p class="hero-sub">Jouw visie, vertaald in een high-end ervaring. Wij bouwen websites die niet alleen mooi zijn, maar ook converteren.</p>
+        <div class="hero-btns">
+            <button class="btn-primary" onclick="changeView('project')">Start jouw project</button>
+            <button class="btn-ghost" onclick="changeView('portfolio')">Bekijk portfolio</button>
+        </div>
+    </section>
 
-<section id="werk">
-    <div class="section-label">Geselecteerd werk</div>
+    <section id="why">
+        <p class="s" style="font-size: 0.6rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3em; margin-bottom: 1rem;">Waarom ZELF.</p>
+        <h2 class="why-heading">Niet zomaar<br>een website.</h2>
+        <div class="why-grid">
+            <div class="why-item">
+                <div class="why-icon"><i data-lucide="zap"></i></div>
+                <div class="why-title">Snel & scherp</div>
+                <div class="why-desc">Wij leveren binnen 2–4 weken een volledig werkende site. Geen maanden wachten.</div>
+            </div>
+            <div class="why-item">
+                <div class="why-icon"><i data-lucide="smartphone"></i></div>
+                <div class="why-title">Mobile-first</div>
+                <div class="why-desc">Geoptimaliseerd voor elk scherm. De ervaring moet overal perfect zijn.</div>
+            </div>
+            <div class="why-item">
+                <div class="why-icon"><i data-lucide="eye"></i></div>
+                <div class="why-title">Custom Design</div>
+                <div class="why-desc">Geen standaard templates. Wij ontwerpen vanaf een leeg canvas voor jouw merk.</div>
+            </div>
+        </div>
+    </section>
+    <footer>
+        <div class="s" style="font-weight: 900; font-style: italic;">ZELF.</div>
+        <p style="font-size: 0.5rem; color: #374151; text-transform: uppercase; margin-top: 1rem;">Webdesign Studio — Antwerpen · 2025</p>
+    </footer>
+</div>
+
+<div id="portfolio-view" class="view">
+    <div class="portfolio-header">
+        <div>
+            <span class="s" style="font-weight: 800; text-transform: uppercase; letter-spacing: 0.3em; font-size: 0.6rem;">Ons Werk</span>
+            <h2 style="font-size: 3rem; font-weight: 900; font-style: italic;">Geselecteerd<br>Portfolio.</h2>
+        </div>
+        <button class="btn-ghost" onclick="changeView('home')">Sluiten</button>
+    </div>
     <div class="work-grid">
         <div class="work-card"><div class="work-card-inner"><div class="work-tag">FinTech</div><div class="work-name s">NEO</div></div></div>
-        <div class="work-card"><div class="work-card-inner"><div class="work-tag">Luxe Fashion</div><div class="work-name">AURA</div></div></div>
-        <div class="work-card"><div class="work-card-inner"><div class="work-tag">Architectuur</div><div class="work-name">MONOLITH</div></div></div>
-        <div class="work-card"><div class="work-card-inner"><div class="work-tag">E-commerce</div><div class="work-name s">VAULT</div></div></div>
+        <div class="work-card"><div class="work-card-inner"><div class="work-tag">Fashion</div><div class="work-name">AURA</div></div></div>
         <div class="work-card"><div class="work-card-inner"><div class="work-tag">SaaS</div><div class="work-name">APEX</div></div></div>
-        <div class="work-card"><div class="work-card-inner"><div class="work-tag">Hospitality</div><div class="work-name">NOIR</div></div></div>
+        <div class="work-card"><div class="work-card-inner"><div class="work-tag">E-com</div><div class="work-name s">VAULT</div></div></div>
     </div>
-</section>
-
-<section id="why">
-    <p class="section-label">Waarom ZELF.</p>
-    <h2 class="why-heading">Niet zomaar<br>een website.</h2>
-    <div class="why-grid">
-        <div class="why-item"><div class="why-icon"><i data-lucide="zap"></i></div><div class="why-title">Snel & scherp</div><div class="why-desc">Wij leveren binnen 2–4 weken een volledig werkende site. Geen maanden wachten.</div></div>
-        <div class="why-item"><div class="why-icon"><i data-lucide="smartphone"></i></div><div class="why-title">Mobile-first</div><div class="why-desc">Meer dan 70% van jouw bezoekers zit op mobiel. Wij beginnen daar en bouwen vanuit die basis.</div></div>
-        <div class="why-item"><div class="why-icon"><i data-lucide="eye"></i></div><div class="why-title">Onderscheidend design</div><div class="why-desc">Geen templates. Elk project is uniek gebouwd rondom jouw merk en doelgroep.</div></div>
-        <div class="why-item"><div class="why-icon"><i data-lucide="trending-up"></i></div><div class="why-title">Gebouwd om te groeien</div><div class="why-desc">Schaalbaar, SEO-klaar en makkelijk uit te breiden naarmate jouw business groeit.</div></div>
+    <div style="text-align: center; margin-top: 5rem;">
+        <button class="btn-primary" onclick="changeView('project')">Mijn eigen project starten →</button>
     </div>
-</section>
+</div>
 
-<section id="pricing">
-    <section id="pricing-step">
+<div id="project-view" class="view">
+    <div id="pricing-step">
         <div class="pricing-header">
-            <div class="section-eyebrow-c">Stap 01 — Fundament</div>
-            <h2 class="pricing-heading">Kies een<br>startpunt.</h2>
-            <p class="pricing-sub">Selecteer een basis, voeg opties toe. Wij bouwen wat jij voor ogen hebt.</p>
+            <span class="s" style="font-weight: 800; text-transform: uppercase; letter-spacing: 0.3em; font-size: 0.6rem;">Stap 01</span>
+            <h2 style="font-size: 3rem; font-weight: 900; font-style: italic;">Kies een<br>Startpunt.</h2>
+            <p style="color: #4b5563; margin-top: 1rem;">Selecteer een basis, wij bouwen wat jij voor ogen hebt.</p>
         </div>
-        <div class="s-rule"></div>
 
         <div class="cards-desktop">
-            <div class="price-card" onclick="toggleSelection(this)">
-                <div class="card-num">01 — Basic</div>
-                <div class="card-title-row"><div><div class="card-title">Basic</div><div class="card-start">Vanaf €950,—</div></div><i data-lucide="zap" style="width:.9rem;height:.9rem;color:#374151;flex-shrink:0;"></i></div>
-                <div class="feat-wrap"><div class="feat-lbl">Inbegrepen</div><div class="feat-row"><i data-lucide="check"></i>Single Page Design</div><div class="feat-row"><i data-lucide="check"></i>Responsive Layout</div><div class="feat-row"><i data-lucide="check"></i>Contact Formulier</div><div class="feat-row"><i data-lucide="check"></i>2 Revisieronden</div></div>
-                <div class="addons-wrap"><div class="feat-lbl" style="margin-bottom:.35rem;">Voeg toe</div>
-                    <div class="addon-row" onclick="toggleAddon(event,this,250)"><div class="addon-left"><div class="addon-check"><i data-lucide="check"></i></div><span class="addon-nm">Premium Animaties</span></div><span class="addon-pr">+€250</span></div>
-                    <div class="addon-row" onclick="toggleAddon(event,this,150)"><div class="addon-left"><div class="addon-check"><i data-lucide="check"></i></div><span class="addon-nm">SEO Setup</span></div><span class="addon-pr">+€150</span></div>
-                </div>
-                <div class="price-live"><span class="price-amt" data-base="950">€950</span><span class="price-sfx">/ eenmalig</span></div>
-                <button class="select-btn" onclick="confirmPlan(event,'Basic',this)" tabindex="-1">Ga verder met Basic</button>
+            <div class="price-card" onclick="selectPlan('Basic', 950, this)">
+                <div class="card-title">Basic</div>
+                <div class="feat-row"><i data-lucide="check"></i> 1 Pagina</div>
+                <div class="feat-row"><i data-lucide="check"></i> Responsive</div>
+                <div class="addon-row" onclick="toggleAddon(event, this, 200)"><span>+ Animaties</span><span>€200</span></div>
+                <span class="price-amt s">€950</span>
+                <button class="select-btn" onclick="goToBriefing('Basic', '€950')">Kies Basic</button>
             </div>
-
-            <div class="price-card card-pro-default" onclick="toggleSelection(this)">
-                <div class="pill-badge">Most Wanted</div>
-                <div class="card-num">02 — Pro</div>
-                <div class="card-title-row"><div><div class="card-title s" style="background:var(--silver-2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Pro</div><div class="card-start">Vanaf €1.950,—</div></div><i data-lucide="layers" style="width:.9rem;height:.9rem;color:#9ca3af;flex-shrink:0;"></i></div>
-                <div class="feat-wrap"><div class="feat-lbl">Inbegrepen</div><div class="feat-row"><i data-lucide="check"></i>Tot 5 Pagina's</div><div class="feat-row"><i data-lucide="check"></i>Custom Animaties</div><div class="feat-row"><i data-lucide="check"></i>CMS Integratie</div><div class="feat-row"><i data-lucide="check"></i>Analytics Dashboard</div><div class="feat-row"><i data-lucide="check"></i>3 Revisieronden</div></div>
-                <div class="addons-wrap"><div class="feat-lbl" style="margin-bottom:.35rem;">Voeg toe</div>
-                    <div class="addon-row" onclick="toggleAddon(event,this,400)"><div class="addon-left"><div class="addon-check"><i data-lucide="check"></i></div><span class="addon-nm">E-commerce</span></div><span class="addon-pr">+€400</span></div>
-                    <div class="addon-row" onclick="toggleAddon(event,this,150)"><div class="addon-left"><div class="addon-check"><i data-lucide="check"></i></div><span class="addon-nm">SEO Optimalisatie</span></div><span class="addon-pr">+€150</span></div>
-                    <div class="addon-row" onclick="toggleAddon(event,this,280)"><div class="addon-left"><div class="addon-check"><i data-lucide="check"></i></div><span class="addon-nm">Meertalig (i18n)</span></div><span class="addon-pr">+€280</span></div>
-                </div>
-                <div class="price-live"><span class="price-amt" data-base="1950">€1.950</span><span class="price-sfx">/ eenmalig</span></div>
-                <button class="select-btn" onclick="confirmPlan(event,'Professional',this)" tabindex="-1">Ga verder met Pro</button>
+            <div class="price-card selected" onclick="selectPlan('Pro', 1950, this)">
+                <div class="card-title s">Pro</div>
+                <div class="feat-row"><i data-lucide="check"></i> 5 Pagina's</div>
+                <div class="feat-row"><i data-lucide="check"></i> CMS Systeem</div>
+                <div class="addon-row" onclick="toggleAddon(event, this, 400)"><span>+ E-commerce</span><span>€400</span></div>
+                <span class="price-amt s">€1.950</span>
+                <button class="select-btn" onclick="goToBriefing('Pro', '€1.950')">Kies Pro</button>
             </div>
-
-            <div class="price-card" onclick="toggleSelection(this)">
-                <div class="card-num">03 — Custom</div>
-                <div class="card-title-row"><div><div class="card-title">Custom</div><div class="card-start">Op aanvraag</div></div><i data-lucide="cpu" style="width:.9rem;height:.9rem;color:#374151;flex-shrink:0;"></i></div>
-                <p style="font-size:.75rem;color:#4b5563;line-height:1.65;margin:1rem 0;">Complexe web-apps, API-koppelingen en grootschalige platforms. Volledig op maat.</p>
-                <div class="feat-wrap"><div class="feat-lbl">Altijd inbegrepen</div><div class="feat-row"><i data-lucide="shield-check"></i>24/7 Priority Support</div><div class="feat-row"><i data-lucide="infinity"></i>Onbeperkte Revisies</div><div class="feat-row"><i data-lucide="users"></i>Dedicated Project Lead</div><div class="feat-row"><i data-lucide="lock"></i>NDA op aanvraag</div></div>
-                <div class="price-live"><span class="price-amt" style="font-size:1.375rem;">Custom</span></div>
-                <button class="select-btn" onclick="confirmPlan(event,'Custom',this)" tabindex="-1">Start Maatwerk</button>
+            <div class="price-card" onclick="selectPlan('Custom', 0, this)">
+                <div class="card-title">Custom</div>
+                <p style="font-size: 0.8rem; color: #4b5563; margin: 1rem 0;">Web-apps en grote platformen op maat.</p>
+                <span class="price-amt s" style="font-size: 1.2rem;">Op aanvraag</span>
+                <button class="select-btn" onclick="goToBriefing('Custom', 'Maatwerk')">Start Gesprek</button>
             </div>
         </div>
+    </div>
 
-        <div class="cards-mobile">
-            <div class="swipe-track" id="swipeTrack">
-
-                <div class="swipe-slide">
-                    <div class="price-card" style="cursor:default;">
-                        <div class="card-num">01 — Basic</div>
-                        <div class="card-title-row"><div><div class="card-title">Basic</div><div class="card-start">Vanaf €950,—</div></div><i data-lucide="zap" style="width:.9rem;height:.9rem;color:#374151;flex-shrink:0;"></i></div>
-                        <div class="feat-wrap"><div class="feat-lbl">Inbegrepen</div><div class="feat-row"><i data-lucide="check"></i>Single Page Design</div><div class="feat-row"><i data-lucide="check"></i>Responsive Layout</div><div class="feat-row"><i data-lucide="check"></i>Contact Formulier</div><div class="feat-row"><i data-lucide="check"></i>2 Revisieronden</div></div>
-                        <div class="addons-wrap"><div class="feat-lbl" style="margin-bottom:.35rem;">Voeg toe</div>
-                            <div class="addon-row" onclick="toggleAddon(event,this,250)"><div class="addon-left"><div class="addon-check"><i data-lucide="check"></i></div><span class="addon-nm">Premium Animaties</span></div><span class="addon-pr">+€250</span></div>
-                            <div class="addon-row" onclick="toggleAddon(event,this,150)"><div class="addon-left"><div class="addon-check"><i data-lucide="check"></i></div><span class="addon-nm">SEO Setup</span></div><span class="addon-pr">+€150</span></div>
-                        </div>
-                        <div class="price-live"><span class="price-amt" data-base="950">€950</span><span class="price-sfx">/ eenmalig</span></div>
-                        <button class="select-btn" onclick="confirmPlanMobile(event,'Basic',this)">Ga verder met Basic</button>
-                    </div>
-                </div>
-
-                <div class="swipe-slide">
-                    <div class="price-card card-pro-default" style="cursor:default;">
-                        <div class="pill-badge">Most Wanted</div>
-                        <div class="card-num">02 — Pro</div>
-                        <div class="card-title-row"><div><div class="card-title" style="background:var(--silver-2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Pro</div><div class="card-start">Vanaf €1.950,—</div></div><i data-lucide="layers" style="width:.9rem;height:.9rem;color:#9ca3af;flex-shrink:0;"></i></div>
-                        <div class="feat-wrap"><div class="feat-lbl">Inbegrepen</div><div class="feat-row"><i data-lucide="check"></i>Tot 5 Pagina's</div><div class="feat-row"><i data-lucide="check"></i>Custom Animaties</div><div class="feat-row"><i data-lucide="check"></i>CMS Integratie</div><div class="feat-row"><i data-lucide="check"></i>Analytics Dashboard</div><div class="feat-row"><i data-lucide="check"></i>3 Revisieronden</div></div>
-                        <div class="addons-wrap"><div class="feat-lbl" style="margin-bottom:.35rem;">Voeg toe</div>
-                            <div class="addon-row" onclick="toggleAddon(event,this,400)"><div class="addon-left"><div class="addon-check"><i data-lucide="check"></i></div><span class="addon-nm">E-commerce</span></div><span class="addon-pr">+€400</span></div>
-                            <div class="addon-row" onclick="toggleAddon(event,this,150)"><div class="addon-left"><div class="addon-check"><i data-lucide="check"></i></div><span class="addon-nm">SEO Optimalisatie</span></div><span class="addon-pr">+€150</span></div>
-                            <div class="addon-row" onclick="toggleAddon(event,this,280)"><div class="addon-left"><div class="addon-check"><i data-lucide="check"></i></div><span class="addon-nm">Meertalig (i18n)</span></div><span class="addon-pr">+€280</span></div>
-                        </div>
-                        <div class="price-live"><span class="price-amt" data-base="1950">€1.950</span><span class="price-sfx">/ eenmalig</span></div>
-                        <button class="select-btn" onclick="confirmPlanMobile(event,'Professional',this)">Ga verder met Pro</button>
-                    </div>
-                </div>
-
-                <div class="swipe-slide">
-                    <div class="price-card" style="cursor:default;">
-                        <div class="card-num">03 — Custom</div>
-                        <div class="card-title-row"><div><div class="card-title">Custom</div><div class="card-start">Op aanvraag</div></div><i data-lucide="cpu" style="width:.9rem;height:.9rem;color:#374151;flex-shrink:0;"></i></div>
-                        <p style="font-size:.75rem;color:#4b5563;line-height:1.65;margin:1rem 0;">Complexe web-apps, API-koppelingen en grootschalige platforms. Volledig op maat.</p>
-                        <div class="feat-wrap"><div class="feat-lbl">Altijd inbegrepen</div><div class="feat-row"><i data-lucide="shield-check"></i>24/7 Priority Support</div><div class="feat-row"><i data-lucide="infinity"></i>Onbeperkte Revisies</div><div class="feat-row"><i data-lucide="users"></i>Dedicated Project Lead</div><div class="feat-row"><i data-lucide="lock"></i>NDA op aanvraag</div></div>
-                        <div class="price-live"><span class="price-amt" style="font-size:1.375rem;">Custom</span></div>
-                        <button class="select-btn" onclick="confirmPlanMobile(event,'Custom',this)">Start Maatwerk</button>
-                    </div>
-                </div>
-
-            </div>
-            <div class="swipe-dots" id="swipeDots">
-                <div class="swipe-dot active"></div>
-                <div class="swipe-dot"></div>
-                <div class="swipe-dot"></div>
-            </div>
-        </div>
-
-        <div class="trust-row">
-            <span>Geen verborgen kosten</span><div class="trust-dot"></div>
-            <span>Betaling in fases</span><div class="trust-dot"></div>
-            <span>Jij blijft eigenaar</span>
-        </div>
-    </section>
-
-    <section id="briefing-step" aria-hidden="true">
-        <span class="brief-tag" id="summary-tag">Plan: Pro</span>
-        <h2 class="brief-title">Laatste<br>Details.</h2>
-        <div class="space-y">
-            <div>
-                <label class="field-lbl" for="project-desc">Jouw Projectomschrijving *</label>
-                <textarea id="project-desc" rows="6" placeholder="Beschrijf je doelen, doelgroep en gewenste stijl..."></textarea>
-            </div>
-            <div>
-                <label class="field-lbl" for="project-deadline">Wanneer wil je live?</label>
-                <textarea id="project-deadline" rows="2" placeholder="Bijv. 'binnen 6 weken' of 'voor 1 september 2025'..."></textarea>
-            </div>
-            <div>
-                <label class="field-lbl" for="contact-email">Jouw e-mailadres *</label>
-                <textarea id="contact-email" rows="1" placeholder="jouw@email.com" style="border-radius:1rem;padding:0.875rem 1.25rem;"></textarea>
-            </div>
-            <div>
-                <label class="field-lbl">Bijlagen (optioneel)</label>
-                <div class="upload-row">
-                    <label class="upload-btn">
-                        <input type="file" id="file-input" multiple accept="image/*,.pdf,.doc,.docx,.fig,.sketch,.zip" style="display:none;" onchange="handleFiles(this.files)">
-                        <i data-lucide="paperclip"></i>
-                        <span>Bestanden toevoegen</span>
-                    </label>
-                    <div id="file-list" class="file-chips"></div>
-                </div>
-            </div>
-            <button class="btn-submit" id="submit-btn" onclick="finalSubmit()">
-                <div class="spinner"></div>
-                <span class="btn-label">Verstuur Aanvraag →</span>
-            </button>
-        </div>
-    </section>
-</section>
-
-<footer id="site-footer">
-    <div class="footer-logo">ZELF.</div>
-    <div class="footer-sub">Webdesign Studio — Antwerpen · 2025</div>
-</footer>
+    <div id="briefing-step">
+        <button class="btn-ghost" style="margin-bottom: 2rem; font-size: 0.5rem;" onclick="location.reload()">← Terug</button>
+        <h2 style="font-size: 2.5rem; font-weight: 900; font-style: italic; margin-bottom: 2rem;">Laatste<br>Details.</h2>
+        <textarea id="proj-desc" rows="5" placeholder="Beschrijf je website idee..."></textarea>
+        <textarea id="proj-email" rows="1" placeholder="Je e-mailadres"></textarea>
+        <button class="btn-submit" onclick="sendProject()">Verstuur Aanvraag →</button>
+    </div>
+</div>
 
 <script>
-// ════════════════════════════════════════
-//  ⚠️  EMAILJS — VOEL HIER JOUW GEGEVENS IN
-// ════════════════════════════════════════
-const EMAILJS_PUBLIC_KEY  = 'rm7BAvHp3wLWPvBfC';   // bijv. "abc123XYZ"
-const EMAILJS_SERVICE_ID  = 'service_sa4d9et';   // bijv. "service_abc123"
-const EMAILJS_TEMPLATE_ID = 'template_sp3aal7';  // bijv. "template_abc123"
-// ════════════════════════════════════════
+    // INIT
+    lucide.createIcons();
+    emailjs.init("rm7BAvHp3wLWPvBfC"); // Gebruik je eigen key
 
-emailjs.init(EMAILJS_PUBLIC_KEY);
+    let selectedPlanData = { name: '', price: '' };
 
-// INIT
-lucide.createIcons();
+    function changeView(viewId) {
+        const currentView = document.querySelector('.view.active');
+        const nextView = document.getElementById(viewId + '-view');
 
-// Hero entrance
-gsap.fromTo('#he', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.7, delay: 0.2, ease: 'power3.out' });
-gsap.fromTo('#hw', { opacity: 0, y: 40, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 1, delay: 0.35, ease: 'power3.out' });
-gsap.fromTo('#hs', { opacity: 0 }, { opacity: 1, duration: 0.7, delay: 0.65, ease: 'power2.out' });
-gsap.fromTo('#hb', { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.6, delay: 0.8, ease: 'power3.out' });
-gsap.fromTo('#sh', { opacity: 0 }, { opacity: 1, duration: 0.6, delay: 1.2 });
+        if (currentView === nextView) return;
 
-// Intersection observers
-const obs = (selector, fn) => {
-    const io = new IntersectionObserver(e => { if (e[0].isIntersecting) { fn(); io.disconnect(); } }, { threshold: 0.1 });
-    const el = document.querySelector(selector);
-    if (el) io.observe(el);
-};
-obs('#werk',    () => gsap.fromTo('.work-card',             { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.55, stagger: 0.08, ease: 'power3.out' }));
-obs('#why',     () => gsap.fromTo('.why-item',              { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5,  stagger: 0.09, ease: 'power3.out' }));
-obs('#pricing', () => gsap.fromTo('.cards-desktop .price-card', { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: 'power3.out' }));
-
-// Swipe dots
-const track = document.getElementById('swipeTrack');
-const dots  = document.querySelectorAll('.swipe-dot');
-if (track) {
-    track.addEventListener('scroll', () => {
-        const idx = Math.round(track.scrollLeft / track.offsetWidth);
-        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
-    }, { passive: true });
-}
-
-// ════ NIEUWE NAVIGATIE / PAGINA TRANSITIE LOGICA ════
-const homeSections = ['hero', 'werk', 'why'];
-
-function goHome() {
-    const heroEl = document.getElementById('hero');
-    if (heroEl.style.display === 'none') {
-        // Als we in de "Prijzen" flow zitten, ga dan terug naar home met een fade
-        const pricingStep = document.getElementById('pricing-step');
-        const briefingStep = document.getElementById('briefing-step');
-
-        gsap.to([pricingStep, briefingStep], {
-            opacity: 0, duration: 0.3,
-            onComplete: () => {
-                homeSections.forEach(id => {
-                    const el = document.getElementById(id);
-                    if(el) { el.style.display = ''; el.style.opacity = '0'; }
-                });
-                document.getElementById('pricing').style.display = '';
-                pricingStep.style.opacity = '1'; // Reset voor later
-                window.scrollTo({ top: 0, behavior: 'instant' });
-                gsap.to(homeSections.map(id => document.getElementById(id)), { opacity: 1, duration: 0.5 });
-            }
-        });
-    } else {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        // Vloeiende overgang
+        const tl = gsap.timeline();
+        tl.to(currentView, { opacity: 0, y: -20, duration: 0.3, onComplete: () => {
+            currentView.classList.remove('active');
+            nextView.classList.add('active');
+            window.scrollTo(0,0);
+        }});
+        tl.fromTo(nextView, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" });
     }
-}
 
-function scrollToSection(id) {
-    const heroEl = document.getElementById('hero');
-    if (heroEl.style.display === 'none') {
-        // Herstel alle secties direct mochten we in het prijzen menu zitten
-        homeSections.forEach(secId => {
-            const el = document.getElementById(secId);
-            if(el) { el.style.display = ''; el.style.opacity = '1'; }
-        });
-        document.getElementById('pricing').style.display = '';
-        document.getElementById('pricing-step').style.opacity = '1';
+    function selectPlan(name, price, el) {
+        document.querySelectorAll('.price-card').forEach(c => c.classList.remove('selected'));
+        el.classList.add('selected');
     }
-    // Wacht even een mini seconde zodat de DOM updatet, daarna scrollen
-    setTimeout(() => {
-        document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 10);
-}
 
-function startFlow() {
-    const elsToHide = homeSections.map(id => document.getElementById(id));
-    const pricingContainer = document.getElementById('pricing');
-    const pricingStep = document.getElementById('pricing-step');
+    function toggleAddon(e, el, price) {
+        e.stopPropagation();
+        el.classList.toggle('active');
+    }
 
-    // Fade out home pagina secties
-    gsap.to(elsToHide, {
-        opacity: 0, y: -20, duration: 0.4, ease: 'power2.inOut',
-        onComplete: () => {
-            // Verberg ze zodat de layout shift naar boven
-            elsToHide.forEach(el => el.style.display = 'none');
-            
-            // Spring naar boven
-            window.scrollTo({ top: 0, behavior: 'instant' });
+    function goToBriefing(name, price) {
+        selectedPlanData = { name, price };
+        gsap.to('#pricing-step', { opacity: 0, x: -50, duration: 0.4, onComplete: () => {
+            document.getElementById('pricing-step').style.display = 'none';
+            document.getElementById('briefing-step').style.display = 'block';
+            gsap.from('#briefing-step', { opacity: 0, x: 50, duration: 0.4 });
+        }});
+    }
 
-            // Zorg dat Prijzen goed staat
-            pricingContainer.style.display = 'block';
-            pricingStep.style.opacity = '1';
+    async function sendProject() {
+        const desc = document.getElementById('proj-desc').value;
+        const email = document.getElementById('proj-email').value;
+        const btn = event.target;
 
-            // Fade de kaarten opnieuw in voor de app feel
-            gsap.fromTo('.pricing-header',
-                { opacity: 0, y: 20 },
-                { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }
-            );
-            gsap.fromTo('.cards-desktop .price-card',
-                { opacity: 0, y: 24 },
-                { opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: 'power3.out', delay: 0.1 }
-            );
-            gsap.fromTo('.cards-mobile',
-                { opacity: 0, y: 24 },
-                { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', delay: 0.1 }
-            );
+        if(!desc || !email) {
+            alert("Vul alles in.");
+            return;
         }
-    });
-}
-// ════ EINDE NIEUWE LOGICA ════
 
-// Price state
-const priceState = new WeakMap();
-let selectedPlanName  = '';
-let selectedPlanPrice = '';
+        btn.disabled = true;
+        btn.innerText = "Bezig met verzenden...";
 
-// Desktop selection
-function toggleSelection(card) {
-    document.querySelectorAll('.cards-desktop .price-card').forEach(c => {
-        c.classList.remove('selected');
-        const b = c.querySelector('.select-btn');
-        b.classList.remove('visible');
-        b.setAttribute('tabindex', '-1');
-    });
-    card.classList.add('selected');
-    const btn = card.querySelector('.select-btn');
-    btn.classList.add('visible');
-    btn.setAttribute('tabindex', '0');
-}
+        const params = {
+            plan: selectedPlanData.name,
+            prijs: selectedPlanData.price,
+            omschrijving: desc,
+            email: email
+        };
 
-function toggleAddon(event, el, amount) {
-    event.stopPropagation();
-    const card    = el.closest('.price-card');
-    const priceEl = card.querySelector('.price-amt');
-    const base    = parseInt(priceEl.dataset.base);
-    if (!base) return;
-    const isActive = el.classList.toggle('active');
-    if (!priceState.has(card)) priceState.set(card, base);
-    let cur = priceState.get(card);
-    cur += isActive ? amount : -amount;
-    priceState.set(card, cur);
-    const counter = { v: parseInt(priceEl.textContent.replace(/[^0-9]/g, '')) };
-    gsap.to(counter, { v: cur, duration: 0.35, ease: 'power2.out',
-        onUpdate() { priceEl.textContent = '€' + Math.round(counter.v).toLocaleString('nl-NL'); }
-    });
-}
-
-function confirmPlan(event, planName, btn) {
-    event.stopPropagation();
-    const card = btn.closest('.price-card');
-    const priceEl = card.querySelector('.price-amt');
-    _doTransition(planName, priceEl ? priceEl.textContent : '');
-}
-
-function confirmPlanMobile(event, planName, btn) {
-    event.stopPropagation();
-    const card = btn.closest('.price-card');
-    const priceEl = card.querySelector('.price-amt');
-    _doTransition(planName, priceEl ? priceEl.textContent : '');
-}
-
-function _doTransition(planName, priceText) {
-    selectedPlanName  = planName;
-    selectedPlanPrice = priceText;
-    document.getElementById('summary-tag').textContent = `${planName}  ·  ${priceText}`;
-
-    const pricingStep = document.getElementById('pricing-step');
-    const briefing    = document.getElementById('briefing-step');
-
-    gsap.to(pricingStep, {
-        opacity: 0, y: -24, duration: 0.4, ease: 'power2.in',
-        onComplete() {
-            pricingStep.style.visibility    = 'hidden';
-            pricingStep.style.position      = 'absolute';
-            pricingStep.style.pointerEvents = 'none';
-            briefing.classList.add('active');
-            briefing.setAttribute('aria-hidden', 'false');
-            window.scrollTo({ top: 0, behavior: 'instant' });
-            gsap.fromTo(briefing, { opacity: 0, y: 32 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' });
+        try {
+            await emailjs.send("service_sa4d9et", "template_sp3aal7", params);
+            btn.innerText = "Verzonden!";
+            document.getElementById('toast').innerText = "Aanvraag ontvangen! We nemen binnen 24u contact op.";
+            document.getElementById('toast').style.display = "block";
+            setTimeout(() => location.reload(), 3000);
+        } catch (e) {
+            alert("Er ging iets mis.");
+            btn.disabled = false;
         }
-    });
-}
-
-// File handling
-const uploadedFileNames = [];
-function handleFiles(files) {
-    const list = document.getElementById('file-list');
-    for (const file of files) {
-        if (uploadedFileNames.includes(file.name)) continue;
-        uploadedFileNames.push(file.name);
-        const chip = document.createElement('div');
-        chip.className = 'file-chip';
-        chip.innerHTML = `<span title="${file.name}">${file.name}</span>`;
-        chip.style.opacity = '0';
-        list.appendChild(chip);
-        gsap.to(chip, { opacity: 1, duration: 0.25, ease: 'power2.out' });
     }
-    document.getElementById('file-input').value = '';
-}
-
-// Toast
-function showToast(msg, type = 'success') {
-    const toast   = document.getElementById('toast');
-    const icon    = document.getElementById('toast-icon');
-    const msgEl   = document.getElementById('toast-msg');
-    toast.className = 'show ' + type;
-    msgEl.textContent = msg;
-    icon.innerHTML = type === 'success'
-        ? '<polyline points="20 6 9 17 4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>'
-        : '<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/><line x1="12" y1="8" x2="12" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="16" x2="12.01" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>';
-    clearTimeout(window._toastTimer);
-    window._toastTimer = setTimeout(() => { toast.className = ''; }, 3500);
-}
-
-// Submit via EmailJS
-async function finalSubmit() {
-    const desc     = document.getElementById('project-desc').value.trim();
-    const deadline = document.getElementById('project-deadline').value.trim();
-    const email    = document.getElementById('contact-email').value.trim();
-    const btn      = document.getElementById('submit-btn');
-
-    if (!desc) {
-        const ta = document.getElementById('project-desc');
-        gsap.fromTo(ta, { x: -7 }, { x: 0, duration: 0.38, ease: 'elastic.out(1,0.35)' });
-        ta.focus();
-        showToast('Vul je projectomschrijving in.', 'error');
-        return;
-    }
-    if (!email || !email.includes('@')) {
-        const ta = document.getElementById('contact-email');
-        gsap.fromTo(ta, { x: -7 }, { x: 0, duration: 0.38, ease: 'elastic.out(1,0.35)' });
-        ta.focus();
-        showToast('Vul een geldig e-mailadres in.', 'error');
-        return;
-    }
-
-    // Loading state
-    btn.disabled = true;
-    btn.classList.add('loading');
-
-    const templateParams = {
-        plan:        selectedPlanName,
-        prijs:       selectedPlanPrice,
-        omschrijving: desc,
-        deadline:    deadline || 'Niet opgegeven',
-        email:       email,
-        bijlagen:    uploadedFileNames.length > 0 ? uploadedFileNames.join(', ') : 'Geen bijlagen',
-    };
-
-    try {
-        await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams);
-
-        btn.classList.remove('loading');
-
-        const briefing = document.getElementById('briefing-step');
-        gsap.to(briefing, {
-            opacity: 0, scale: 0.96, duration: 0.4, ease: 'power2.in',
-            onComplete() {
-                briefing.innerHTML = `
-                    <div style="min-height:70dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:3rem 1.5rem;">
-                        <div style="font-size:2.5rem;opacity:0.08;margin-bottom:2rem;">✦</div>
-                        <h1 style="font-size:clamp(3rem,12vw,6rem);font-weight:900;font-style:italic;letter-spacing:-0.04em;line-height:0.9;background:linear-gradient(135deg,#f5f7fa,#b8c6db,#f5f7fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:1.5rem;">On the<br>Radar.</h1>
-                        <p style="color:#6b7280;max-width:20rem;line-height:1.75;font-size:.875rem;">We hebben je aanvraag ontvangen en sturen bevestiging naar <strong style="color:#9ca3af;">${email}</strong>. Je hoort binnen 24 uur van ons.</p>
-                        <button onclick="location.reload()" style="margin-top:3rem;font-size:.525rem;font-weight:800;letter-spacing:.35em;text-transform:uppercase;background:none;border:none;border-bottom:1px solid rgba(255,255,255,.12);color:#fff;cursor:pointer;padding-bottom:.3rem;opacity:.4;transition:opacity .2s;min-height:44px;display:flex;align-items:flex-end;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=.4">Terug naar home</button>
-                    </div>
-                `;
-                briefing.style.maxWidth = 'none';
-                gsap.fromTo(briefing, { opacity: 0, scale: 0.97 }, { opacity: 1, scale: 1, duration: 0.6, ease: 'power3.out' });
-            }
-        });
-
-    } catch (err) {
-        btn.disabled = false;
-        btn.classList.remove('loading');
-        showToast('Verzenden mislukt. Probeer opnieuw.', 'error');
-        console.error('EmailJS error:', err);
-    }
-}
 </script>
+
 </body>
 </html>
